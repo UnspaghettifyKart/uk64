@@ -2,6 +2,15 @@
 
 We all love spaghetti! It's delicious, tasty, and outright brilliant flavours. You can just imagine it. It's 1996 and you're sitting at your IRIX workstation programming Mario Kart 64... With a plate of spaghetti perilously close to the computer keyboard. Your two-thirds through a nearly sixteen hour day and in a tetonic dream-like state. When Miyamoto appears around your shoulder inquiring as to what you are doing. You nearly jump out of your seat as your hand grazes the plate of spaghetti sending it _everywhere_. Spaghetti on you. Spaghetti on Miyamoto. Spaghetti on the keyboard. Spaghetti hanging off the computer monitor. You notice tomato sauce dripping into the mainframe. _This can't be good_. Despite previous preconceptions, code and spaghetti do _not_ mix and your workstation is now infected by spaghetti! Suddenly your code files are tens of thousands of lines long, you have features spread across files in a haphazard, inconsistent, and unorganized manner. Your once majestic memory management routines are no longer existant, replaced by a manually typed DMA everytime one is used. The sweet actor behaviour routines are now spread between two completely different actor setups in no conceptual or coordinated manner. You and Miyamoto look upon the project in horror with Miyamoto quietly whispering "_What have you done?_" Your fantastic state of the art 3D models having been replaced with sprites was the final insult to injury. All you can do is shake your head as you get back to work. Your final deadline is only a month away afterall...
 
+This modding repo seeks to declutter the code-base and add some new fun features.
+
+## Contributing
+* Place new features behind a condition so they can be toggled on/off.
+* A new segment for new standalone files will be setup.
+* Try to describe all your changes in your PR. PR commits should be very descriptive to help reverts and bug investigations.
+* Test your changes that you haven't effected other gameplay elements in a negative way.
+* Have fun!
+
 ## Decomp Readme
 
 This work-in-progress decompilation of Mario Kart 64 pursues historical and educational elements within the game found via taking it apart and putting it back together. Inspiration to do so not only emanates from the game's hardware and technology but also its immensely positive effects on the cultures and families of nearly every nationality. See [progress](#Progress) for more information.
