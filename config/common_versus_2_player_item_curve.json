@@ -1,0 +1,23 @@
+[
+    {
+        "banana": 25,
+        "boo": 5,
+        "banana_bunch": 10,
+        "green_shell": 30,
+        "triple_green_shell": 5,
+        "red_shell": 5,
+        "fake_item_box": 10,
+        "mushroom": 10
+    },
+    {
+        "triple_mushroom": 15,
+        "banana_bunch": 5,
+        "triple_green_shell": 5,
+        "red_shell": 5,
+        "blue_spiny_shell": 5,
+        "super_mushroom": 20,
+        "thunderbolt": 15,
+        "triple_red_shell": 15,
+        "star": 15
+    }
+]

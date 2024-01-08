@@ -1,0 +1,63 @@
+[
+    {
+        "banana": 60,
+        "green_shell": 25,
+        "fake_item_box": 10,
+        "boo": 5
+    },
+    {
+        "banana": 50,
+        "green_shell": 25,
+        "triple_green_shell": 5,
+        "fake_item_box": 10,
+        "boo": 5,
+        "mushroom": 5
+    },
+    {
+        "banana": 40,
+        "green_shell": 25,
+        "triple_green_shell": 10,
+        "fake_item_box": 10,
+        "boo": 5,
+        "mushroom": 10
+    },
+    {
+        "banana": 35,
+        "green_shell": 25,
+        "triple_green_shell": 15,
+        "fake_item_box": 10,
+        "boo": 5,
+        "mushroom": 10
+    },
+    {
+        "banana": 30,
+        "green_shell": 20,
+        "triple_green_shell": 20,
+        "fake_item_box": 5,
+        "star": 5,
+        "mushroom": 20
+    },
+    {
+        "banana": 30,
+        "green_shell": 20,
+        "triple_green_shell": 20,
+        "fake_item_box": 5,
+        "star": 5,
+        "mushroom": 20
+    },
+    {
+        "banana": 30,
+        "green_shell": 20,
+        "triple_green_shell": 20,
+        "star": 10,
+        "mushroom": 20
+    },
+    {
+        "banana": 25,
+        "green_shell": 20,
+        "triple_green_shell": 20,
+        "thunderbolt": 1,
+        "star": 10,
+        "mushroom": 24
+    }
+]

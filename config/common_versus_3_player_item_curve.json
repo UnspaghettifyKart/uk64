@@ -1,0 +1,34 @@
+[
+    {
+        "banana": 35,
+        "banana_bunch": 5,
+        "green_shell": 30,
+        "red_shell": 5,
+        "fake_item_box": 10,
+        "boo": 5,
+        "mushroom": 10
+    },
+    {
+        "banana": 5,
+        "banana_bunch": 5,
+        "triple_green_shell": 10,
+        "red_shell": 15,
+        "triple_red_shell": 15,
+        "thunderbolt": 5,
+        "fake_item_box": 5,
+        "star": 5,
+        "boo": 5,
+        "mushroom": 5,
+        "triple_mushroom": 20,
+        "super_mushroom": 5
+    },
+    {
+        "red_shell": 10,
+        "triple_red_shell": 20,
+        "blue_spiny_shell": 10,
+        "thunderbolt": 15,
+        "star": 15,
+        "triple_mushroom": 20,
+        "super_mushroom": 10
+    }
+]
