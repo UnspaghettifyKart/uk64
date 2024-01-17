@@ -11,10 +11,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Get rom
+      - name: Get Complementary file
         uses: actions/checkout@v4
         with:
-          path: file
+          path: complementary_file
           repository: UnspaghettifyKart/action-build-private-file
           ssh-key: ${{ secrets.SSH_PRIVATE_KEY }}
       - name: Install dependencies
@@ -26,5 +26,5 @@ jobs:
           make -C tools
       - name: Build
         run: |
-          cp -r file/* .
+          cp -r complementary_file/* .
           make
