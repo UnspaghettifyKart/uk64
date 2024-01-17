@@ -14,7 +14,7 @@ jobs:
       - name: Get rom
         uses: actions/checkout@v4
         with:
-          path: rom
+          path: file
           repository: UnspaghettifyKart/action-build-private-file
           ssh-key: ${{ secrets.SSH_PRIVATE_KEY }}
       - name: Install dependencies
@@ -26,5 +26,5 @@ jobs:
           make -C tools
       - name: Build
         run: |
-          cp -r rom/* .
+          cp -r file/* .
           make
