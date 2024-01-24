@@ -1,0 +1,11 @@
+<map id="uObjSprite" name="uObjSprite">
+<area shape="rect" id="Node000001" title=" " alt="" coords="85,328,175,353"/>
+<area shape="rect" id="Node000002" href="$structuObjSprite__t.html" title=" " alt="" coords="28,240,131,265"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="95,276,125,326,121,329,91,279"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,5,44,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="21,44,14,80,10,124,13,171,28,215,39,228,53,238,50,242,35,232,24,217,8,172,5,124,8,79,15,43"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="110,5,161,31"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="138,45,132,123,123,171,108,217,93,241,88,238,104,215,118,170,127,123,133,44"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="155,240,206,265"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="169,279,139,329,135,326,165,276"/>
+</map>
