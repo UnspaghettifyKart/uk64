@@ -17,6 +17,7 @@
 #include "save_data.h"
 #include <sounds.h>
 #include "spawn_players.h"
+#include "mods/sound_test.h"
 
 /** BSS **/
 s32 D_8018EDC0;
@@ -150,6 +151,10 @@ const union GameModePack D_800F2BE4 = { {0, 1, 2, 3} };
  */
 void update_menus(void) {
     u16 controllerIdx;
+
+    if (mod_soundTestActive) {
+        mod_sound_test();
+    }
 
     if (D_800E86A4 == 0) {
         for (controllerIdx = 0; controllerIdx < 4; controllerIdx++) {

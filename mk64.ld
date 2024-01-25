@@ -415,18 +415,21 @@ SECTIONS
       BUILD_DIR/src/os/is_debug.o(.text);
 
       BUILD_DIR/src/mods/flycam.o(.text);
+      BUILD_DIR/src/mods/sound_test.o(.text);
       
       BUILD_DIR/src/debug/crash_screen_enhancement.o(.data);
       BUILD_DIR/src/debug/debug.o(.data);
       BUILD_DIR/src/os/sprintf.o(.data);
 
       BUILD_DIR/src/mods/flycam.o(.data);
+      BUILD_DIR/src/mods/sound_test.o(.data);
 
       BUILD_DIR/src/debug/crash_screen_enhancement.o(.rodata);
       BUILD_DIR/src/debug/debug.o(.rodata);
       BUILD_DIR/src/os/sprintf.o(.rodata);
 
       BUILD_DIR/src/mods/flycam.o(.rodata);
+      BUILD_DIR/src/mods/sound_test.o(.rodata);
       . = ALIGN(0x10);
    }
    END_SEG(mods)
@@ -439,6 +442,7 @@ SECTIONS
       BUILD_DIR/src/os/is_debug.o(.bss);
       BUILD_DIR/src/os/sprintf.o(.bss);
       BUILD_DIR/src/mods/flycam.o(.bss);
+      BUILD_DIR/src/mods/sound_test.o(.bss);
       . = ALIGN(0x10);
    }
    END_NOLOAD(mods)
