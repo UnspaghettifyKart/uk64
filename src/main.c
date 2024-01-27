@@ -562,7 +562,6 @@ void setup_game_memory(void) {
 
 void setup_modding_memory(void) {
     init_segment_modding();
-    isPrintfInit();
     osSyncPrintf("Modding segment loaded\n");
 }
 
