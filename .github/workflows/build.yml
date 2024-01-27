@@ -19,7 +19,8 @@ jobs:
           ssh-key: ${{ secrets.SSH_PRIVATE_KEY }}
       - name: Install dependencies
         run: |
-          sudo apt install build-essential pkg-config git binutils-mips-linux-gnu python3 zlib1g-dev libaudiofile-dev libcapstone-dev
+          sudo apt install build-essential pkg-config git binutils-mips-linux-gnu python3 python3-pip zlib1g-dev libaudiofile-dev libcapstone-dev |
+          pip install toml
 
       - name: Build tools
         run: |
