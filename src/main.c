@@ -560,6 +560,12 @@ void setup_game_memory(void) {
     gFreeMemoryResetAnchor = gNextFreeMemoryAddress;
 }
 
+void setup_modding_memory(void) {
+    init_segment_modding();
+    isPrintfInit();
+    osSyncPrintf("Modding segment loaded\n");
+}
+
 /**
  * @brief
  *
@@ -1079,6 +1085,7 @@ void thread3_video(UNUSED void *arg0) {
     }
     setup_mesg_queues();
     setup_game_memory();
+    setup_modding_memory();
 
     create_thread(&gAudioThread, 4, &thread4_audio, 0, gAudioThreadStack + ARRAY_COUNT(gAudioThreadStack), 20);
     osStartThread(&gAudioThread);
