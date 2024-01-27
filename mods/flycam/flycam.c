@@ -67,7 +67,7 @@ void flycam_load_state(Camera *camera);
  * Camera mode 2: Enter flycam at previous flycam spot
  * 
 */
-HOOK(func_8001E45C, START)
+HOOK(func_8001E45C, START, 0)
 void flycam(bool* cancel, Camera *camera, Player *player, s8 index) {
     struct Controller *controller = &gControllers[0];
     Vec3f forwardVector;
@@ -108,7 +108,7 @@ void flycam(bool* cancel, Camera *camera, Player *player, s8 index) {
 
     // Driving mode
     if (!mod_isFlycam) {
-        *cancel = FLASE;
+        *cancel = FALSE;
         return;
     }
 

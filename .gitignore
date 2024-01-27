@@ -87,3 +87,6 @@ expected/*
 
 # Doxygen
 docs/html/*
+
+# Generated files
+generate_file/*.c

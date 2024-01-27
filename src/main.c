@@ -488,6 +488,14 @@ void init_segment_racing(void) {
     osInvalDCache((void *) SEG_RACING, RACING_SEQUENCE_SIZE);
 }
 
+void init_segment_modding(void) {
+    bzero((void *) SEG_MODS, MODDING_SEGMENT_SIZE);
+    osWritebackDCacheAll();
+    dma_copy((u8 *) SEG_MODS, (u8 *) &_modsSegmentRomStart, ALIGN16((u32)&_modsSegmentRomEnd - (u32)&_modsSegmentRomStart));
+    osInvalICache((void *) SEG_MODS, MODDING_SEGMENT_SIZE);
+    osInvalDCache((void *) SEG_MODS, MODDING_SEGMENT_SIZE);
+}
+
 void dma_copy(u8 *dest, u8 *romAddr, u32 size) {
 
     osInvalDCache(dest, size);

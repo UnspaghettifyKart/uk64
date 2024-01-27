@@ -440,7 +440,7 @@ SECTIONS
       BUILD_DIR/generate_file/vanilla.o(.rodata)
       . = ALIGN(0x10);
    }
-   END_NOLOAD(mods)
+   END_SEG(mods)
 
    BEGIN_NOLOAD(mods)
    {
@@ -449,6 +449,12 @@ SECTIONS
       . = ALIGN(0x10);
    }
    END_NOLOAD(mods)
+
+   _modsSegmentNoloadSize = SIZEOF(.mods.noload) + 0x10;
+
+   _modsSegmentNoloadSizeHi = _modsSegmentNoloadSize >> 16;
+   _modsSegmentNoloadSizeLo = _modsSegmentNoloadSize & 0xFFFF;
+   
    /* 0x801978D0 12AAE0-132B50 [8070] */
    /* texture tables and DLs, set as segment 0x02 */
    BEGIN_SEG(data_segment2, 0x02000000)

@@ -9,10 +9,12 @@ RUN apt-get update && \
         git \
         pkg-config \
         python3 \
+        python3-pip \
 	wget \
         zlib1g-dev
 
 RUN mkdir /mk64
+RUN pip3 install toml
 WORKDIR /mk64
 
 CMD echo 'Usage: docker run -it --rm -v ${PWD}:/mk64 mk64 make\n'\

@@ -188,7 +188,7 @@ LD_SCRIPT      := mk64.ld
 ASSET_DIR      := assets
 BIN_DIR        := bin
 DATA_DIR       := data
-INCLUDE_DIRS   := include
+INCLUDE_DIRS   := include mods core
 
 # Directories containing source files
 SRC_DIRS       := src src/data src/racing src/ending src/audio src/debug src/os src/os/math courses generate_file
