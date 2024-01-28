@@ -3,6 +3,10 @@ import re
 import toml # not the default toml package because ubuntu use old version of python
 
 def get_mods_settings(file = "mods/mods.toml"):
+    if not os.path.isfile(file):
+        with open(file, "w") as f:
+            f.write("[disabled]\n")
+        return {"disabled": []}
     with open(file, "r") as f:
         return toml.load(f)
 
@@ -15,6 +19,7 @@ def get_c_file_list(directory = "."):
     return c_file_list
 
 def generate_file_mods(directory = "mods", out="generate_file"):
+    print("Generating mods file...")
     if not os.path.isdir(out):
         os.mkdir(out)
     mods_settings = get_mods_settings()
@@ -27,3 +32,4 @@ def generate_file_mods(directory = "mods", out="generate_file"):
     with open(out+'/mods.c', "w") as f:
         for file in c_file_list:
             f.write("#include \""+file+"\"\n")
+    print("Done!")
