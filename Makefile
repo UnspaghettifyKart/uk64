@@ -154,7 +154,9 @@ TOOLS_DIR := tools
 PYTHON := python3
 
 LOGS != $(PYTHON) tools/mods
-$(info $(LOGS))
+ifeq ($(LOGS),)
+  $(error Failed to load mods)
+endif
 
 ifeq ($(filter clean distclean print-%,$(MAKECMDGOALS)),)
 
