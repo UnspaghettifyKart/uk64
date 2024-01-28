@@ -90,3 +90,4 @@ docs/html/*
 
 # Generated files
 generate_file/*.c
+mods/hook.txt
