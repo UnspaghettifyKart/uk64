@@ -1,28 +1,27 @@
 import os
 import re
-from generate_mods_file import get_mods_settings
+from utils import get_mods_settings, enumerate_c_files
 
 def get_hook(directory = "."):
     hooks = {}
-    for root, dirs, files in os.walk(directory):
-        for file in files:
-            if file.endswith(".c"):
-                hooks.update(get_hook_file(os.path.join(root, file)))
+    for root, file in enumerate_c_files(directory):
+        hooks.update(get_hook_file(os.path.join(root, file)))
     return hooks
 
 def get_hook_file(file:str):
     with open(file, "r") as f:
         hook = {}
         lines = f.readlines()
-        i = 0
-        for line in lines:
-            if line.startswith("HOOK("):
-                funct, placement, priority = re.findall(r"HOOK\((\w+) *, *(\w+), *(\d+)\)", line)[0]
-                name = re.findall(r".* (\w+)\(", lines[i+1])[0]
-                if funct not in hook:
-                    hook[funct] = []
-                hook[funct] += [{"placement": placement, "priority": priority, "name": name, "header": file.replace(".c", ".h")}]
-            i += 1
+
+    i = 0
+    for line in lines:
+        if line.startswith("HOOK("):
+            funct, placement, priority = re.findall(r"HOOK\((\w+) *, *(\w+), *(\d+)\)", line)[0]
+            name = re.findall(r".* (\w+)\(", lines[i+1])[0]
+            if funct not in hook:
+                hook[funct] = []
+            hook[funct] += [{"placement": placement, "priority": priority, "name": name, "header": file.replace(".c", ".h")}]
+        i += 1
     return hook
 
 def detect_make_hook(file:str, hooks:dict):

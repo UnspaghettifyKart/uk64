@@ -1,12 +1,5 @@
 import os
-
-def get_c_file_list(directory = "."):
-    c_file_list = []
-    for root, dirs, files in os.walk(directory):
-        for file in files:
-            if file.endswith(".c"):
-                c_file_list.append(os.path.join(root, file))
-    return c_file_list
+from utils import get_c_file_list
 
 def generate_file_vanilla(directory = "vanilla", out="generate_file"):
     print("Generating vanilla file...")

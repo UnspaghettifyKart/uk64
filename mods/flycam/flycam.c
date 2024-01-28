@@ -16,6 +16,7 @@
 #include "code_800029B0.h"
 #include "hooks.h"
 #include "render_player.h"
+#include "render_courses.h"
 
 // Yaw/pitch rotation sensitivity
 #define SENSITIVITY_X 0.0003f
@@ -46,7 +47,7 @@ void flycam_save_state(Camera *camera);
 void flycam_load_state(Camera *camera);
 
 HOOK(check_player_camera_collision, START, 0)
-u16 ignore_for_flycam(bool* cancel, Camera *camera, Player *player) {
+u16 ignore_for_flycam(bool* cancel, UNUSED Player *player, UNUSED Camera *camera, UNUSED f32 arg2, UNUSED f32 arg3) {
     if (mod_isFlycam) {
         *cancel = TRUE;
         return 1;
@@ -197,13 +198,8 @@ void over_load_surface_map(bool* cancel, uintptr_t addr, struct UnkStruct_800DC5
  * 
 */
 HOOK(func_8001E45C, START, 0)
-void flycam(bool* cancel, Camera *camera, Player *player, s8 index) {
+void flycam(bool* cancel, Camera *camera, Player *player, UNUSED s8 index) {
     struct Controller *controller = &gControllers[0];
-    Vec3f forwardVector;
-    f32 dirX;
-    f32 dirY;
-    f32 dirZ;
-    f32 length;
     if (controller->buttonPressed & L_TRIG && last_pressed != (controller->buttonPressed & L_TRIG)) {
         last_pressed = controller->buttonPressed & L_TRIG;
         mod_isFlycam = !mod_isFlycam;
@@ -285,7 +281,7 @@ void flycam_load_state(Camera *camera) {
     camera->rot[2] = fState.rot[2];
 }
 
-void flycam_controller_manager(Camera *camera, struct Controller *controller, Player *player) {
+void flycam_controller_manager(Camera *camera, struct Controller *controller, UNUSED Player *player) {
 
     if (controller->buttonPressed & U_JPAD) {
         fMode = !fMode;
@@ -365,7 +361,6 @@ void flycam_calculate_forward_vector(Camera* camera, Vec3f forwardVector) {
 // Function to move the camera forward
 void flycam_move_camera_forward(Camera* camera, struct Controller *controller, f32 distance) {
     Vec3f forwardVector;
-    Vec3f rightVector;
     f32 length;
     flycam_calculate_forward_vector(camera, forwardVector);
 
@@ -378,11 +373,6 @@ void flycam_move_camera_forward(Camera* camera, struct Controller *controller, f
     forwardVector[0] /= length;
     forwardVector[1] /= length;
     forwardVector[2] /= length;
-
-    // Calculate the right vector by taking the cross product of forward and up
-    rightVector[0] = forwardVector[1] * camera->up[2] - forwardVector[2] * camera->up[1];
-    rightVector[1] = forwardVector[2] * camera->up[0] - forwardVector[0] * camera->up[2];
-    rightVector[2] = forwardVector[0] * camera->up[1] - forwardVector[1] * camera->up[0];
 
     // Move the camera's position along the forward vector while considering its up vector
     camera->pos[0] += forwardVector[0] * distance;
@@ -436,7 +426,6 @@ void flycam_update(Camera* camera, struct Controller *controller) {
 }
 
 void flycam_target_player(Camera *camera, u32 playerIndex) {
-    Vec3f forwardVector;// = 2.0f;
     Player *player = &gPlayers[playerIndex];
 
     // Calculate the direction from the player to the camera
