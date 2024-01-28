@@ -97,7 +97,7 @@ def apply_hook(line:str, hook:list[dict], func_name:str) -> list[str]:
     lines_out.append("    {}original_{}({});\n".format(prefix,func_name, args_without_type))
 
     for hook in hook_end:
-        lines_out.append("    {}{}({},ret);\n".format(prefix, hook["name"], args_without_type))
+        lines_out.append("    {}{}({},&ret);\n".format(prefix, hook["name"], args_without_type))
 
     if type_ != "void":
         lines_out.append("    return ret;\n")
