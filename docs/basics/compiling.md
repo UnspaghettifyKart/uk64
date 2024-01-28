@@ -12,7 +12,7 @@ To add submodules run `git submodule update --init --recursive` after cloning.
 
 # Linux
 ```bash
-sudo apt install build-essential pkg-config git binutils-mips-linux-gnu python3 zlib1g-dev libaudiofile-dev libcapstone-dev
+sudo apt install build-essential pkg-config git binutils-mips-linux-gnu python3 python3-pip zlib1g-dev libaudiofile-dev libcapstone-dev
 ```
 
 ### Arch
@@ -40,6 +40,11 @@ brew install python3 capstone coreutils make pkg-config tehzz/n64-dev/mips64-elf
 ```
 
 Build using `gmake` ensuring homebrew `make` is used instead of the old macOS system `make`.
+
+# Python
+```bash
+pip install toml
+```
 
 # Docker
 
