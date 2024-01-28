@@ -153,6 +153,9 @@ TOOLS_DIR := tools
 
 PYTHON := python3
 
+LOGS != $(PYTHON) tools/mods
+$(info $(LOGS))
+
 ifeq ($(filter clean distclean print-%,$(MAKECMDGOALS)),)
 
 # Make sure assets exist
@@ -370,9 +373,6 @@ endef
 #==============================================================================#
 # Main Targets                                                                 #
 #==============================================================================#
-LOGS != $(PYTHON) tools/mods
-$(info $(LOGS))
-
 all: $(ROM)
 
 doc:
