@@ -15,6 +15,7 @@
 #include "code_80005FD0.h"
 #include "code_800029B0.h"
 #include "hooks.h"
+#include "render_player.h"
 
 // Yaw/pitch rotation sensitivity
 #define SENSITIVITY_X 0.0003f
@@ -43,6 +44,13 @@ void flycam_move_camera_up(Camera* camera, struct Controller *controller, f32 di
 void flycam_save_state(Camera *camera);
 void flycam_load_state(Camera *camera);
 
+HOOK(check_player_camera_collision, START, 0)
+u16 ignore_for_flycam(bool* cancel, Camera *camera, Player *player) {
+    if (mod_isFlycam) {
+        *cancel = TRUE;
+        return 1;
+    }
+}
 
 /**
  * Controls

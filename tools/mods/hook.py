@@ -31,11 +31,12 @@ def detect_make_hook(file:str, hooks:dict):
     with open(file, "r") as f:
         for line in f.readlines():
             for func_name in hooks:
-                if re.match(r".+ *"+func_name+r"\(.*\) *{", line):
+                if re.match(r".+ +"+func_name+r"\(.*\) *{", line):
                     modify = True
                     lines+=apply_hook(line, hooks[func_name], func_name)
-                else:
-                    lines.append(line)
+                    break
+            else:
+                lines.append(line)
     if modify:
         with open("generate_file/"+file.split("/")[-1], "w") as f:
             f.writelines(lines)
@@ -57,7 +58,7 @@ def apply_hook(line, hook, func_name):
     args_without_type = ", ".join(re.findall(r"([\w\d_]+) *[,)]", args))
     lines_out.append(type_+" original_"+func_name+"("+args+";\n")
     lines_out.append(type_+" "+func_name+"("+args+" {\n")
-    lines_out.append("    bool cancel;\n")
+    lines_out.append("    bool cancel = FALSE;\n")
     if type_ != "void":
         lines_out.append("    {} ret;\n".format(type_))
         for hook in hook_start:
