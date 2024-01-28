@@ -26,6 +26,7 @@ u32 fRankIndex = 0;
 u32 fTargetPlayer = FALSE;
 u32 fMode; // flycam mode should probably be an enum
 u32 fModeInit = FALSE;
+bool last_pressed = FALSE;
 
 typedef struct {
     Vec3f pos;
@@ -50,6 +51,126 @@ u16 ignore_for_flycam(bool* cancel, Camera *camera, Player *player) {
         *cancel = TRUE;
         return 1;
     }
+}
+
+HOOK(load_surface_map, START, 0)
+void over_load_surface_map(bool* cancel, uintptr_t addr, struct UnkStruct_800DC5EC *arg1) {
+    Player *player = arg1->player;
+    Camera *camera = arg1->camera;
+    u32 segment = SEGMENT_NUMBER2(addr);
+    u32 offset = SEGMENT_OFFSET(addr);
+    //! @todo Should be Gfx*
+    s32 *gfx = (s32 *) VIRTUAL_TO_PHYSICAL2(gSegmentTable[segment] + offset);
+    s16 var_a3;
+    s16 temp_v1;
+    s16 sp1E;
+    s16 temp_v0_3;
+    u16 rot;
+    *cancel = TRUE;
+    if (gIsMirrorMode) {
+        rot = (u16) camera->rot[1];
+        if (rot < 0x2000) {
+            var_a3 = 2;
+        } else if (rot < 0x6000) {
+            var_a3 = 3;
+        } else if (rot < 0xA000) {
+            var_a3 = 0;
+        } else if (rot < 0xE000) {
+            var_a3 = 1;
+        } else {
+            var_a3 = 2;
+        }
+    } else {
+        rot = (u16) camera->rot[1];
+        if (rot < 0x2000) {
+            var_a3 = 2;
+        } else if (rot < 0x6000) {
+            var_a3 = 1;
+        }
+        else if (rot < 0xA000) {
+            var_a3 = 0;
+        }
+        else if (rot < 0xE000) {
+            var_a3 = 3;
+        }
+        else {
+            var_a3 = 2;
+        }
+    }
+    arg1->playerDirection = var_a3;
+
+    if (D_80152300[camera - camera1] == 1) {
+        sp1E = func_802ABD40(camera->unk_54.unk3A);
+        temp_v0_3 = func_802ABD40(player->unk_110.unk3A);
+        temp_v1 = sp1E - temp_v0_3;
+        if ((temp_v1 < 2) && (temp_v1 >= -1)) {
+            if (sp1E == 255) {
+                if (temp_v0_3 == 255) {
+                    temp_v1 = arg1->pathCounter;
+                } else if (player->unk_110.unk3C[2] > 30.0f) {
+                    temp_v1 = arg1->pathCounter;
+                } else { 
+                    temp_v1 = temp_v0_3;
+                }
+            } else if (camera->unk_54.unk3C[2] > 30.0f) {
+                temp_v1 = arg1->pathCounter;
+            } else { 
+                temp_v1 = sp1E;
+            }
+        } else {
+
+            switch(gCurrentCourseId) {
+                case COURSE_BOWSER_CASTLE:
+                        if ((temp_v0_3 >= 0x11) && (temp_v0_3 < 0x18)) {
+                            temp_v1 = temp_v0_3;
+                        } else if ((temp_v0_3 == 255) && (sp1E != 255)) {
+                            temp_v1 = sp1E;
+                        } else if ((temp_v0_3 != 255) && (sp1E == 255)) {
+                            temp_v1 = temp_v0_3;
+                        } else {
+                            temp_v1 = arg1->pathCounter;
+                        }
+                    break;
+                case COURSE_CHOCO_MOUNTAIN:
+                    if ((temp_v0_3 >= 0xE) && (temp_v0_3 < 0x16)) {
+                        temp_v1 = temp_v0_3;
+                    } else if ((temp_v0_3 == 255) && (sp1E != 255)) {
+                        temp_v1 = sp1E;
+                    } else if ((temp_v0_3 != 255) && (sp1E == 255)) {
+                        temp_v1 = temp_v0_3;
+                    } else {
+                        temp_v1 = arg1->pathCounter;
+                    }
+                    break;
+                default:
+                    if (temp_v0_3 == 255) {
+                        temp_v1 = arg1->pathCounter;
+                    } else if (player->unk_110.unk3C[2] > 30.0f) {
+                        temp_v1 = arg1->pathCounter;
+                    } else { 
+                        temp_v1 = temp_v0_3;
+                    }
+                    break;
+            }
+        }
+    } else {
+        temp_v1 = func_802ABD40(camera->unk_54.unk3A);
+        if (camera->unk_54.unk3C[2] > 30.0f) {
+            temp_v1 = arg1->pathCounter;
+        } else if (temp_v1 == 255) { 
+            temp_v1 = arg1->pathCounter;
+        }
+    }
+
+    arg1->pathCounter = temp_v1;
+    temp_v1 = ((temp_v1 - 1) * 4) + var_a3;
+
+    if (mod_isFlycam) {
+        func_8029569C();
+        return;
+    }
+    
+    gSPDisplayList(gDisplayListHead++, gfx[temp_v1]);
 }
 
 /**
@@ -83,8 +204,8 @@ void flycam(bool* cancel, Camera *camera, Player *player, s8 index) {
     f32 dirY;
     f32 dirZ;
     f32 length;
-    
-    if (controller->buttonPressed & L_TRIG) {
+    if (controller->buttonPressed & L_TRIG && last_pressed != (controller->buttonPressed & L_TRIG)) {
+        last_pressed = controller->buttonPressed & L_TRIG;
         mod_isFlycam = !mod_isFlycam;
 
         // Don't use `bool = !bool` here as the game code can swap these on you.
@@ -113,6 +234,8 @@ void flycam(bool* cancel, Camera *camera, Player *player, s8 index) {
             }
         }
     }
+
+    last_pressed = controller->buttonPressed & L_TRIG;
 
     // Driving mode
     if (!mod_isFlycam) {
