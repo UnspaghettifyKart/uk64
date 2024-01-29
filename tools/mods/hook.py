@@ -19,7 +19,7 @@ def get_hook_file(file:str) -> dict[str, list[dict]]:
     i = 0
     for line in lines:
         if line.startswith("HOOK("):
-            funct, placement, priority = re.findall(r"HOOK\((\w+) *, *(\w+), *(\d+)\)", line)[0]
+            funct, placement, priority = re.findall(r"HOOK\((\w+) *, *(\w+) *, *(\d+)\)", line)[0]
             name = re.findall(r".* (\w+)\(", lines[i+1])[0]
             if funct not in hooks:
                 hooks[funct] = []
@@ -84,11 +84,13 @@ def apply_hook(line:str, hook:list[dict], func_name:str) -> list[str]:
 
     prefix = ""
     out = ""
+    ret_args = ""
 
     if type_ != "void":
         lines_out.append("    {} ret;\n".format(type_))
         prefix = "ret = "
         out = "ret"
+        ret_args = "&ret, "
 
     for hook in hook_start:
         lines_out.append("    {}{}(&cancel, {});\n".format(prefix, hook["name"], args_without_type))
@@ -97,7 +99,7 @@ def apply_hook(line:str, hook:list[dict], func_name:str) -> list[str]:
     lines_out.append("    {}original_{}({});\n".format(prefix,func_name, args_without_type))
 
     for hook in hook_end:
-        lines_out.append("    {}{}({},&ret);\n".format(prefix, hook["name"], args_without_type))
+        lines_out.append("    {}{}({}{});\n".format(prefix, hook["name"], ret_args, args_without_type))
 
     if type_ != "void":
         lines_out.append("    return ret;\n")
