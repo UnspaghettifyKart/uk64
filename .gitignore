@@ -40,7 +40,7 @@
 .vscode/*
 
 # General project-specific ignores
-__pycache__/*
+__pycache__
 doxygen/doxygen/*
 docs/html/*
 xml/*
@@ -89,5 +89,5 @@ expected/*
 docs/html/*
 
 # Generated files
-generate_file/*.c
+mod_file/**/*.c
 mods/hook.txt

@@ -432,20 +432,16 @@ SECTIONS
 
    BEGIN_SEG(mods, SEG_MODS)
    {
-      BUILD_DIR/generate_file/mods.o(.text)
-      BUILD_DIR/generate_file/vanilla.o(.text)
-      BUILD_DIR/generate_file/mods.o(.data)
-      BUILD_DIR/generate_file/vanilla.o(.data)
-      BUILD_DIR/generate_file/mods.o(.rodata)
-      BUILD_DIR/generate_file/vanilla.o(.rodata)
+      BUILD_DIR/mod_file/files.o(.text)
+      BUILD_DIR/mod_file/files.o(.data)
+      BUILD_DIR/mod_file/files.o(.rodata)
       . = ALIGN(0x10);
    }
    END_SEG(mods)
 
    BEGIN_NOLOAD(mods)
    {
-      BUILD_DIR/generate_file/mods.o(.bss)
-      BUILD_DIR/generate_file/vanilla.o(.bss)
+      BUILD_DIR/mod_file/files.o(.bss)
       . = ALIGN(0x10);
    }
    END_NOLOAD(mods)

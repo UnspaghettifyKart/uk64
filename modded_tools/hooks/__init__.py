@@ -1,15 +1,16 @@
 import os
 import re
-from utils import get_mods_settings, enumerate_c_files, gen_header, remove_non_letter
+from utils import get_mods_settings, gen_header, remove_non_letter
+from pathlib import Path
 
-def get_hook(directory:str) -> dict[str, list[dict]]:
+def get_hook(directory:Path) -> dict[str, list[dict]]:
     """Get all hook in directory"""
     hooks = {}
-    for root, file in enumerate_c_files(directory):
-        hooks.update(get_hook_file(os.path.join(root, file)))
+    for file in directory.glob("**/*.c"):
+        hooks.update(get_hook_file(file))
     return hooks
 
-def get_hook_file(file:str) -> dict[str, list[dict]]:
+def get_hook_file(file:Path) -> dict[str, list[dict]]:
     """Get all hook from file"""
     hooks:dict[str, list[dict]] = {}
 
@@ -27,22 +28,23 @@ def get_hook_file(file:str) -> dict[str, list[dict]]:
             assert placement in ["START", "END"], "HOOK placement should be either START or END"
             assert funct != name, "HOOK function name should not be the same as the original function name"
 
-            hooks[funct].append({"placement": placement, "priority": int(priority), "name": name, "header": file.replace(".c", ".h")})
+            hooks[funct].append({"placement": placement, "priority": int(priority), "name": name, "header": file.with_suffix(".h"), "pattern": re.compile(r".+ +"+funct+r"\(.*\) *{")})
         i += 1
     return hooks
 
-def detect_matching_hook(file:str, hooks:dict[str, list[dict]], lines:list[str]) -> tuple[str, str]:
+def detect_matching_hook(file:Path, hooks:dict[str, list[dict]], lines_:list[str]) -> tuple[str, str]:
     """Detect matching hook"""
     with open(file, "r") as f:
-        for line in f.readlines():
+        lines = f.readlines()
+        for line in lines:
             for func_name in hooks:
-                if re.match(r".+ +"+func_name+r"\(.*\) *{", line):
+                if hooks[func_name][0]["pattern"].match(line):
                     yield func_name, line
                     break
             else:
-                lines.append(line)
+                lines_.append(line)
 
-def detect_make_hook(file:str, hooks:dict[str, list[dict]]) -> bool:
+def detect_make_hook(file:Path, hooks:dict[str, list[dict]], out:Path) -> bool:
     """Detect if hook is needed and apply it"""
     modify = False
     lines = []
@@ -50,9 +52,9 @@ def detect_make_hook(file:str, hooks:dict[str, list[dict]]) -> bool:
     for func_name, line in detect_matching_hook(file, hooks, lines):
         modify = True
         lines+=apply_hook(line, hooks[func_name], func_name)
-            
     if modify:
-        with open("generate_file/"+file.split("/")[-1], "w") as f:
+        (out/file).parent.mkdir(parents=True, exist_ok=True)
+        with (out/file).open("w") as f:
             f.writelines(lines)
 
     return modify
@@ -71,7 +73,7 @@ def apply_hook(line:str, hook:list[dict], func_name:str) -> list[str]:
 
     lines_out = []
     for hook_ in hook:
-        lines_out.append(gen_header(hook_["header"]))
+        lines_out.append(gen_header(str(hook_["header"])))
     lines_out.append("\n")
 
     type_, args = re.findall(r"(.+) +\w+\((.*)\)", line)[0]
@@ -109,25 +111,22 @@ def apply_hook(line:str, hook:list[dict], func_name:str) -> list[str]:
     lines_out.append(type_+" original_"+func_name+"("+args+") {\n")    
     return lines_out
 
-def generate_file_hook(directory:str = "mods", out:str = "generate_file"):
-    """Generate hook file"""
-    if not os.path.isdir(out):
-        os.mkdir(out)
-    
+def mod_file_hook(directory:Path = Path("mods"), out:Path = Path("mod_file")):
+    """Generate hook file"""    
     mods_settings = get_mods_settings()
     hooks = {}
     
     for mod in os.listdir(directory):
         if mod in mods_settings["disabled"]:
             continue
-        hooks.update(get_hook(directory+"/"+mod))
+        hooks.update(get_hook(directory/mod))
     
     hook_files = []
     
-    for root, file in enumerate_c_files("src"):
-        if detect_make_hook(os.path.join(root, file), hooks):
-            hook_files.append((os.path.join(root, file).replace(".c", ".o"), os.path.join(out, file.replace(".c", ".o"))))
+    for file in Path("src").glob("**/*.c"):
+        if detect_make_hook(file, hooks, out):
+            hook_files.append((file.with_suffix(".o"), out/file.with_suffix(".o")))
 
-    with open(directory+'/hook.txt', "w") as f:
+    with open(directory/'hook.txt', "w") as f:
         for file in hook_files:
-            f.write(file[0]+","+file[1]+"\n")
+            f.write(str(file[0])+","+str(file[1])+"\n")
