@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="https://raw.githubusercontent.com/UnspaghettifyKart/UnspaghettifyKart/develop/resources/logo/icon_x128.png" style="width: 128px;" alt="Unspaghettify Kart 64 logo"/>
+    <img src="https://avatars.githubusercontent.com/u/155843345?v=4" style="width: 128px;" alt="Unspaghettify Kart 64 logo"/>
 </p>
 
 <h1 align="center"> Unspaghettify Kart 64 </h1>
