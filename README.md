@@ -4,7 +4,7 @@
 
 <h1 align="center"> Unspaghettify Kart 64 </h1>
 
-This modding repo seeks to declutter the code-base, fix bugs, add fun features, and to refurbish this archaeological find from the era of computing antiquity.
+This repo seeks to refurbish the fossil from computing antiquity that is mk64. This includes decluttering the code-base, fixing bugs, and adding fun features.
 
 ## Contributing
 * Place new features that effect gameplay behind a condition so they can be toggled on/off.
