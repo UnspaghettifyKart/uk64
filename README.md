@@ -4,7 +4,8 @@
 
 <h1 align="center"> Unspaghettify Kart 64 </h1>
 
-This repo seeks to refurbish the fossil from computing antiquity that is mk64. This includes decluttering the code-base, fixing bugs, and adding fun features.
+This repo seeks to refurbish the fossil from computing antiquity that is mk64. This includes decluttering the code-base, fixing bugs, and adding fun features.  
+View the projects [lore](https://n64decomp.github.io/mk64/lore.html)
 
 ## Contributing
 * Place new features that effect gameplay behind a condition so they can be toggled on/off.
