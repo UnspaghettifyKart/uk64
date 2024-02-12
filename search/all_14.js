@@ -204,9 +204,11 @@ var searchData=
   ['logo_5fintro_5fmenu_5fact_201',['logo_intro_menu_act',['../menus_8c.html#a2624e9b264715a18c2bb23c5c71d5108',1,'logo_intro_menu_act(struct Controller *arg0, UNUSED u16 arg1):&#160;menus.c'],['../menus_8h.html#a097beed7872ad2f5d34b5b2f4b5e9024',1,'logo_intro_menu_act(struct Controller *, u16):&#160;menus.h']]],
   ['lookat_202',['lookAt',['../structCamera.html#ae16ab2b8e885264666d7e7e20bb872a1',1,'Camera::lookAt'],['../structCinematicCamera.html#a11e4d83299cab081332c8625c1d3a8fd',1,'CinematicCamera::lookAt']]],
   ['loop_203',['loop',['../structAudioBankSample.html#ad188e9d6ef8fb385d84bc3c635927469',1,'AudioBankSample::loop'],['../structALADPCMWaveInfo.html#ad4b5483c93397b568cd28c6055ef50ef',1,'ALADPCMWaveInfo::loop'],['../structALRAWWaveInfo.html#a2fb2b21087e87d197d3cf6017f80e119',1,'ALRAWWaveInfo::loop']]],
-  ['lownotessound_204',['lowNotesSound',['../structInstrument.html#a262f6b3996de2e9a9313ef11b4f59325',1,'Instrument']]],
-  ['luigi_205',['LUIGI',['../defines_8h.html#a1ba3226d974a364d7682f44614e311d9',1,'defines.h']]],
-  ['luigi_5fraceway_5fdls_206',['luigi_raceway_dls',['../all__course__offsets_8h.html#aaa712b636fed8c945d1a40cb424cf3c1',1,'luigi_raceway_dls:&#160;course_offsets.inc.c'],['../luigi__raceway_2course__offsets_8inc_8c.html#a4c2f606e63c9d8d04322ec19c5f2b35a',1,'luigi_raceway_dls:&#160;course_offsets.inc.c']]],
-  ['luigi_5fraceway_5ftextures_207',['luigi_raceway_textures',['../all__course__offsets_8h.html#a3d2a83a8626fae1a580d09212be62459',1,'luigi_raceway_textures:&#160;course_offsets.inc.c'],['../courseTable_8h.html#a946b458719fd45242c2cafa86b7976db',1,'luigi_raceway_textures:&#160;course_offsets.inc.c'],['../luigi__raceway_2course__offsets_8inc_8c.html#a68bdefbd63217953a5f543aeda2fbfcc',1,'luigi_raceway_textures:&#160;course_offsets.inc.c']]],
-  ['luigi_5fsize_208',['LUIGI_SIZE',['../defines_8h.html#a57d2983415fa3cf8ab2a9bee6f087c7a',1,'defines.h']]]
+  ['lore_204',['Lore',['../md_docs_2lore.html',1,'']]],
+  ['lore_2emd_205',['lore.md',['../lore_8md.html',1,'']]],
+  ['lownotessound_206',['lowNotesSound',['../structInstrument.html#a262f6b3996de2e9a9313ef11b4f59325',1,'Instrument']]],
+  ['luigi_207',['LUIGI',['../defines_8h.html#a1ba3226d974a364d7682f44614e311d9',1,'defines.h']]],
+  ['luigi_5fraceway_5fdls_208',['luigi_raceway_dls',['../all__course__offsets_8h.html#aaa712b636fed8c945d1a40cb424cf3c1',1,'luigi_raceway_dls:&#160;course_offsets.inc.c'],['../luigi__raceway_2course__offsets_8inc_8c.html#a4c2f606e63c9d8d04322ec19c5f2b35a',1,'luigi_raceway_dls:&#160;course_offsets.inc.c']]],
+  ['luigi_5fraceway_5ftextures_209',['luigi_raceway_textures',['../all__course__offsets_8h.html#a3d2a83a8626fae1a580d09212be62459',1,'luigi_raceway_textures:&#160;course_offsets.inc.c'],['../courseTable_8h.html#a946b458719fd45242c2cafa86b7976db',1,'luigi_raceway_textures:&#160;course_offsets.inc.c'],['../luigi__raceway_2course__offsets_8inc_8c.html#a68bdefbd63217953a5f543aeda2fbfcc',1,'luigi_raceway_textures:&#160;course_offsets.inc.c']]],
+  ['luigi_5fsize_210',['LUIGI_SIZE',['../defines_8h.html#a57d2983415fa3cf8ab2a9bee6f087c7a',1,'defines.h']]]
 ];

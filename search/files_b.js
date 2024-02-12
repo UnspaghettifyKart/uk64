@@ -9,5 +9,6 @@ var searchData=
   ['llconv_2ec_6',['llconv.c',['../llconv_8c.html',1,'']]],
   ['llmuldiv_2ec_7',['llmuldiv.c',['../llmuldiv_8c.html',1,'']]],
   ['load_2ec_8',['load.c',['../load_8c.html',1,'']]],
-  ['load_2eh_9',['load.h',['../load_8h.html',1,'']]]
+  ['load_2eh_9',['load.h',['../load_8h.html',1,'']]],
+  ['lore_2emd_10',['lore.md',['../lore_8md.html',1,'']]]
 ];
