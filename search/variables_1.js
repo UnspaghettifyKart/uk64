@@ -36,7 +36,7 @@ var searchData=
   ['arg2_33',['arg2',['../structEuAudioCmd.html#a97a7720c1b2c0d5571b907b1d0e9869a',1,'EuAudioCmd']]],
   ['arg3_34',['arg3',['../structEuAudioCmd.html#abd560698a2e9a6552341de8fafee0ede',1,'EuAudioCmd']]],
   ['arr_35',['arr',['../structstruct__8018EE10__entry__cont.html#a411aa9ee55a7734711ac513277071b58',1,'struct_8018EE10_entry_cont']]],
-  ['as_5fbitfields_36',['as_bitfields',['../structSequenceChannel.html#aa58766752b19a48095fd40ed2f1712f5',1,'SequenceChannel']]],
+  ['as_5fbitfields_36',['as_bitfields',['../structSequenceChannel.html#a30227c764d63eee4d7309811505aa27b',1,'SequenceChannel']]],
   ['as_5ff32_37',['as_f32',['../structEuAudioCmd.html#a068bbf2068bc573348dadd447addee28',1,'EuAudioCmd']]],
   ['as_5fraw_38',['as_raw',['../unionOSContPackedStruct.html#abf6f8bb9c051c488e27712d6b3e9fa7b',1,'OSContPackedStruct']]],
   ['as_5fs32_39',['as_s32',['../structEuAudioCmd.html#a44ee160469c9b32e444a3773f1b10344',1,'EuAudioCmd']]],

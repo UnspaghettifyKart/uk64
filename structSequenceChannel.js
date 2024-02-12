@@ -2,11 +2,11 @@ var structSequenceChannel =
 [
     [ "adsr", "structSequenceChannel.html#a40f70e37de5b74d7ed57bf2c7dbee72e", null ],
     [ "appliedVolume", "structSequenceChannel.html#ae2af58db32f6e02b7495a72932bb201c", null ],
-    [ "as_bitfields", "structSequenceChannel.html#aa58766752b19a48095fd40ed2f1712f5", null ],
+    [ "as_bitfields", "structSequenceChannel.html#a30227c764d63eee4d7309811505aa27b", null ],
     [ "as_u8", "structSequenceChannel.html#a7eb976bfe10fde23908926fd3a2124a8", null ],
     [ "bankId", "structSequenceChannel.html#a4819816555a2774b5b6edf6f8292be79", null ],
     [ "bookOffset", "structSequenceChannel.html#ac28336aa1b2f34a4f95ab24d24ecc680", null ],
-    [ "changes", "structSequenceChannel.html#a15cad4ea8bf40de2eb3dd631741725fc", null ],
+    [ "changes", "structSequenceChannel.html#a6832d1de79f9e6d6bd207beaf8183d31", null ],
     [ "delay", "structSequenceChannel.html#aca133567ad3c965a02afe14490e9e4ea", null ],
     [ "dynTable", "structSequenceChannel.html#a2df4dd94b4ca99190ac1310b345a26e9", null ],
     [ "enabled", "structSequenceChannel.html#aaa0ea8943c6b8d1cd4d9b7011dcc9779", null ],

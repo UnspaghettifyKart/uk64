@@ -15,7 +15,7 @@ var structNoteSubEu =
     [ "reverbIndex", "structNoteSubEu.html#a6fc69c4ef54a586c244e0aacda534dca", null ],
     [ "reverbVol", "structNoteSubEu.html#a3d8a690a7418abc301b01a504a7aca6f", null ],
     [ "samples", "structNoteSubEu.html#a6b84d3c75a1da53b09cedce3188c14de", null ],
-    [ "sound", "structNoteSubEu.html#a90fe1c0dfff8aa278be2b65af0177f69", null ],
+    [ "sound", "structNoteSubEu.html#ae7930bbc60e859d1c050c2d9a0be550a", null ],
     [ "stereoHeadsetEffects", "structNoteSubEu.html#af7e8d3f08f13dd24fb832d058d832d00", null ],
     [ "stereoStrongLeft", "structNoteSubEu.html#adc9a8cd184bc35e52022017cbd873eb3", null ],
     [ "stereoStrongRight", "structNoteSubEu.html#a572c93df00fce28175f1dd4243ccb1b7", null ],

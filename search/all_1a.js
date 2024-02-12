@@ -206,7 +206,7 @@ var searchData=
   ['ri_5fselect_5freg_203',['RI_SELECT_REG',['../rcp_8h.html#a30704a217cd3ad451f297d9d0a6f5156',1,'rcp.h']]],
   ['ri_5fwerror_5freg_204',['RI_WERROR_REG',['../rcp_8h.html#abf327e3c1435e6b20851faf9e13dcba1',1,'rcp.h']]],
   ['right_205',['right',['../structSynthesisReverb.html#a5fe52018768c0e1e22713c3eabf89483',1,'SynthesisReverb']]],
-  ['ringbuffer_206',['ringBuffer',['../structSynthesisReverb.html#a1263fee39eb05ec1a0b922e6d57fafab',1,'SynthesisReverb']]],
+  ['ringbuffer_206',['ringBuffer',['../structSynthesisReverb.html#acb72569f4e647dd4ceeb23fe57b9975f',1,'SynthesisReverb']]],
   ['rm_5faa_5fdec_5fline_207',['RM_AA_DEC_LINE',['../gbi_8h.html#a205a30ce6c304d4f2a6e99cb3f06303f',1,'gbi.h']]],
   ['rm_5faa_5fopa_5fsurf_208',['RM_AA_OPA_SURF',['../gbi_8h.html#acc3628299177ec5d6ca0cbee659ce8f0',1,'gbi.h']]],
   ['rm_5faa_5fopa_5fterr_209',['RM_AA_OPA_TERR',['../gbi_8h.html#ae976ea65d09b44642a339a29420a7a97',1,'gbi.h']]],

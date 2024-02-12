@@ -250,7 +250,7 @@ var searchData=
   ['array_20overflows_247',['Array Overflows',['../concepts.html#array-overflows',1,'']]],
   ['array_5fcount_248',['ARRAY_COUNT',['../macros_8h.html#a4bf0a01781df461ad257e5391ac09ae7',1,'macros.h']]],
   ['arrlen_249',['ARRLEN',['../controller_8h.html#a9b41a5a2d7085e2040feb07286d0ce36',1,'controller.h']]],
-  ['as_5fbitfields_250',['as_bitfields',['../structSequenceChannel.html#aa58766752b19a48095fd40ed2f1712f5',1,'SequenceChannel']]],
+  ['as_5fbitfields_250',['as_bitfields',['../structSequenceChannel.html#a30227c764d63eee4d7309811505aa27b',1,'SequenceChannel']]],
   ['as_5ff32_251',['as_f32',['../structEuAudioCmd.html#a068bbf2068bc573348dadd447addee28',1,'EuAudioCmd']]],
   ['as_5fraw_252',['as_raw',['../unionOSContPackedStruct.html#abf6f8bb9c051c488e27712d6b3e9fa7b',1,'OSContPackedStruct']]],
   ['as_5fs32_253',['as_s32',['../structEuAudioCmd.html#a44ee160469c9b32e444a3773f1b10344',1,'EuAudioCmd']]],

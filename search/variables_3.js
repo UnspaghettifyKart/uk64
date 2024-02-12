@@ -15,7 +15,7 @@ var searchData=
   ['cameras_12',['cameras',['../camera_8c.html#a6e365adf67032d81607218565ad3a85b',1,'cameras:&#160;camera.c'],['../camera_8h.html#a8f5ed94c43a83ee4c33fba816f1e4ee5',1,'cameras:&#160;camera.c']]],
   ['cartromhandle_13',['CartRomHandle',['../osCartRomInit_8c.html#a9ca42de4a02fb061fd253676827be77e',1,'CartRomHandle:&#160;osCartRomInit.c'],['../piint_8h.html#a9ca42de4a02fb061fd253676827be77e',1,'CartRomHandle:&#160;osCartRomInit.c']]],
   ['cause_14',['cause',['../struct____OSThreadContext.html#a875ff7979f508f25f11c86ea9a44f265',1,'__OSThreadContext']]],
-  ['changes_15',['changes',['../structSequenceChannel.html#a15cad4ea8bf40de2eb3dd631741725fc',1,'SequenceChannel']]],
+  ['changes_15',['changes',['../structSequenceChannel.html#a6832d1de79f9e6d6bd207beaf8183d31',1,'SequenceChannel']]],
   ['channels_16',['channels',['../structSequencePlayer.html#a79c9f7e13f8ef2c8cf33379a299f55bf',1,'SequencePlayer']]],
   ['characterid_17',['characterId',['../structPlayer.html#a3c54f7cdfdf596fcb7500e4b56a3340d',1,'Player::characterId'],['../structstruct__8018EE10__entry.html#a914f15b105f15bb21c2a835deddc4690',1,'struct_8018EE10_entry::characterId']]],
   ['checksum_18',['checksum',['../struct____OSPackId.html#a3c75f2e73e2f46a51008272dcf8ff41e',1,'__OSPackId::checksum'],['../structstruct__8018EE10__entry.html#a5b842d90fa6f5e94101f8ac8c064569a',1,'struct_8018EE10_entry::checksum'],['../structCourseTimeTrialRecords.html#a91e118cf346d05af5de32d3e3e237710',1,'CourseTimeTrialRecords::checksum'],['../structStuff.html#ad056b13c115fb94fdd946e78e5675706',1,'Stuff::checksum']]],

@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['s_0',['s',['../unionReverbBits.html#a395ca89e82139bcaf63c939ac327cc93',1,'ReverbBits::s'],['../structEuAudioCmd.html#a19a94c8e21fba5358de8bc6a024976d8',1,'EuAudioCmd::s'],['../unionuObjBg.html#a67f2ac6d29c26a7c29fc7c5a60289de0',1,'uObjBg::s'],['../unionuObjSprite.html#ae66ad3c7ce997a9563fbe04a7580513f',1,'uObjSprite::s']]],
+  ['s_0',['s',['../unionReverbBits.html#a395ca89e82139bcaf63c939ac327cc93',1,'ReverbBits::s'],['../structEuAudioCmd.html#aa3ef1fa61b73ba751ea05db6c2701684',1,'EuAudioCmd::s'],['../unionuObjBg.html#a67f2ac6d29c26a7c29fc7c5a60289de0',1,'uObjBg::s'],['../unionuObjSprite.html#ae66ad3c7ce997a9563fbe04a7580513f',1,'uObjSprite::s']]],
   ['s0_1',['s0',['../struct____OSThreadContext.html#a3952bd4cb9dc3738c3cc3e9ba22fcac9',1,'__OSThreadContext']]],
   ['s1_2',['s1',['../struct____OSThreadContext.html#aa54a6330a239f04e197a7e030afb87b9',1,'__OSThreadContext']]],
   ['s2_3',['s2',['../struct____OSThreadContext.html#a8d22b76ab27135b585718d24872f091c',1,'__OSThreadContext']]],
@@ -142,7 +142,7 @@ var searchData=
   ['sometimer_139',['someTimer',['../structRailroadCrossing.html#ae8dffede0df7f0e6c6eef1e9c9a131d8',1,'RailroadCrossing::someTimer'],['../structShellActor.html#adaca452aa94770d8d57f99cc1f3b7151',1,'ShellActor::someTimer'],['../structItemBox.html#a0da3ae45931357d0c3e53712f842069d',1,'ItemBox::someTimer'],['../structFakeItemBox.html#a29e91595b541928305d78842ada268da',1,'FakeItemBox::someTimer'],['../structhud__player.html#ad80fe1d21b4947560b519495d273b804',1,'hud_player::someTimer']]],
   ['sometimer1_140',['someTimer1',['../structhud__player.html#af9b7eb46b805b0f2934ec4e9adc0785c',1,'hud_player']]],
   ['sometype_141',['someType',['../structVehicleStuff.html#a154666f1e460a83f36963a88a8fc248b',1,'VehicleStuff']]],
-  ['sound_142',['sound',['../structDrum.html#a7fa01f66282a6c93f8a1bc88feee7350',1,'Drum::sound'],['../structSequenceChannelLayer.html#ae760c176981b74855c052c752d627167',1,'SequenceChannelLayer::sound'],['../structNoteSubEu.html#a90fe1c0dfff8aa278be2b65af0177f69',1,'NoteSubEu::sound']]],
+  ['sound_142',['sound',['../structDrum.html#a7fa01f66282a6c93f8a1bc88feee7350',1,'Drum::sound'],['../structSequenceChannelLayer.html#ae760c176981b74855c052c752d627167',1,'SequenceChannelLayer::sound'],['../structNoteSubEu.html#ae7930bbc60e859d1c050c2d9a0be550a',1,'NoteSubEu::sound']]],
   ['soundarray_143',['soundArray',['../structALInstrument.html#a1b99bfcd548e911b609e25c503392649',1,'ALInstrument']]],
   ['soundbits_144',['soundBits',['../structUnk__8018FC20.html#a20aa036ef37891ca08486014c1e9fb11',1,'Unk_8018FC20::soundBits'],['../structUnk__8018EFD8.html#a80f3c84fa7635876e584c33b23088535',1,'Unk_8018EFD8::soundBits'],['../structUnk__80191420.html#aa4668410bdf6493e0565d7d8d5cc3ef3',1,'Unk_80191420::soundBits']]],
   ['soundcount_145',['soundCount',['../structALInstrument.html#af17c9cdf8bab0d46f033b09143bd1918',1,'ALInstrument']]],

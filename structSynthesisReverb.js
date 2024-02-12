@@ -13,7 +13,7 @@ var structSynthesisReverb =
     [ "resampleStateRight", "structSynthesisReverb.html#a70a22a0cdee2d03b6d06fbd2b3226563", null ],
     [ "reverbGain", "structSynthesisReverb.html#a1b25d21952ec1fc371d3a00dd6802e5a", null ],
     [ "right", "structSynthesisReverb.html#a5fe52018768c0e1e22713c3eabf89483", null ],
-    [ "ringBuffer", "structSynthesisReverb.html#a1263fee39eb05ec1a0b922e6d57fafab", null ],
+    [ "ringBuffer", "structSynthesisReverb.html#acb72569f4e647dd4ceeb23fe57b9975f", null ],
     [ "unk100", "structSynthesisReverb.html#a82c89d4f0c9540c0f0f9ea68ba6347d3", null ],
     [ "unk104", "structSynthesisReverb.html#af5dddf0dc829753ac487ac160e90bb79", null ],
     [ "unk24", "structSynthesisReverb.html#a54c2267cc8a0a5d27b436b5fa9139b9f", null ],
