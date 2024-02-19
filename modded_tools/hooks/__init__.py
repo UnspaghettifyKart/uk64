@@ -1,12 +1,12 @@
 import os
 import re
-from utils import get_mods_settings, gen_header, remove_non_letter
-from pathlib import Path
+from typing import Any, Generator
+from utils import get_mods_settings, gen_header, remove_non_letter, Path
 
 def get_hook(directory:Path) -> dict[str, list[dict]]:
     """Get all hook in directory"""
     hooks = {}
-    for file in directory.glob("**/*.c"):
+    for file in directory.all_file_end(".c"):
         hooks.update(get_hook_file(file))
     return hooks
 
@@ -14,8 +14,8 @@ def get_hook_file(file:Path) -> dict[str, list[dict]]:
     """Get all hook from file"""
     hooks:dict[str, list[dict]] = {}
 
-    with open(file, "r") as f:
-        lines = f.readlines()
+    with file.open("r") as f:
+        lines:list[str] = f.readlines()
 
     i = 0
     for line in lines:
@@ -32,9 +32,9 @@ def get_hook_file(file:Path) -> dict[str, list[dict]]:
         i += 1
     return hooks
 
-def detect_matching_hook(file:Path, hooks:dict[str, list[dict]], lines_:list[str]) -> tuple[str, str]:
+def detect_matching_hook(file:Path, hooks:dict[str, list[dict]], lines_:list[str]) -> Generator[tuple[str, str], Any, None]:
     """Detect matching hook"""
-    with open(file, "r") as f:
+    with file.open("r", encoding="utf-8") as f:
         lines = f.readlines()
         for line in lines:
             for func_name in hooks:
@@ -52,9 +52,10 @@ def detect_make_hook(file:Path, hooks:dict[str, list[dict]], out:Path) -> bool:
     for func_name, line in detect_matching_hook(file, hooks, lines):
         modify = True
         lines+=apply_hook(line, hooks[func_name], func_name)
+    file_out:Path = out/file
     if modify:
-        (out/file).parent.mkdir(parents=True, exist_ok=True)
-        with (out/file).open("w") as f:
+        file_out.parent().mkdir(exist_ok=True)
+        with file_out.open("w") as f:
             f.writelines(lines)
 
     return modify
@@ -116,17 +117,17 @@ def mod_file_hook(directory:Path = Path("mods"), out:Path = Path("mod_file")):
     mods_settings = get_mods_settings()
     hooks = {}
     
-    for mod in os.listdir(directory):
+    for mod in os.listdir(directory.path):
         if mod in mods_settings["disabled"]:
             continue
         hooks.update(get_hook(directory/mod))
     
     hook_files = []
     
-    for file in Path("src").glob("**/*.c"):
+    for file in Path("src").all_file_end(".c"):
         if detect_make_hook(file, hooks, out):
             hook_files.append((file.with_suffix(".o"), out/file.with_suffix(".o")))
 
-    with open(directory/'hook.txt', "w") as f:
+    with (directory/'hook.txt').open("w") as f:
         for file in hook_files:
             f.write(str(file[0])+","+str(file[1])+"\n")
