@@ -1,6 +1,7 @@
 """Python module which parses and emits TOML.
 
 Released under the MIT license.
+code from https://github.com/uiri/toml
 """
 
 """
