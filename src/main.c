@@ -33,7 +33,6 @@
 #include "render_courses.h"
 #include "actors.h"
 #include "staff_ghosts.h"
-#include <debug.h>
 #include "crash_screen.h"
 #include "data/gfx_output_buffer.h"
 
@@ -856,9 +855,6 @@ void race_logic_loop(void) {
     func_802A4300();
     func_800591B4();
     func_80093E20();
-#if DVDL
-	display_dvdl();
-#endif
     gDPFullSync(gDisplayListHead++);
     gSPEndDisplayList(gDisplayListHead++);
 }
@@ -877,19 +873,6 @@ void race_logic_loop(void) {
  */
 
 void game_state_handler(void) {
-#if DVDL
-	if ((gControllerOne->button & L_TRIG) &&
-		(gControllerOne->button & R_TRIG) &&
-		(gControllerOne->button & Z_TRIG) &&
-		(gControllerOne->button & A_BUTTON)) {
-			gGamestateNext = CREDITS_SEQUENCE;
-	} else if ((gControllerOne->button & L_TRIG) &&	
-		(gControllerOne->button & R_TRIG) &&
-		(gControllerOne->button & Z_TRIG) &&
-		(gControllerOne->button & B_BUTTON)) {
-			gGamestateNext = ENDING_SEQUENCE;
-	}
-#endif
 
     switch (gGamestate) {
         case 7:
@@ -904,9 +887,6 @@ void game_state_handler(void) {
             update_menus();
             init_rcp();
             func_80094A64(gGfxPool);
-#if DVDL
-			display_dvdl();
-#endif
             break;
         case RACING:
             race_logic_loop();

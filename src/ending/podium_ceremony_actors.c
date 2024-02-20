@@ -3,7 +3,6 @@
 #include <PR/gu.h>
 #include <mk64.h>
 #include <types.h>
-#include <debug.h>
 #include <common_structs.h>
 #include "main.h"
 #include "memory.h"
@@ -475,9 +474,6 @@ void podium_ceremony_loop(void) {
     }
     func_80281D00();
     func_80281540();
-#if DVDL
-	display_dvdl();	 
-#endif
     gDPFullSync(gDisplayListHead++);
     gSPEndDisplayList(gDisplayListHead++);
 }

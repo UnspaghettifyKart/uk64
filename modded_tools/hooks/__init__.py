@@ -18,17 +18,22 @@ def get_hook_file(file:Path) -> dict[str, list[dict]]:
         lines:list[str] = f.readlines()
 
     i = 0
-    for line in lines:
-        if line.startswith("HOOK("):
-            funct, placement, priority = re.findall(r"HOOK\((\w+) *, *(\w+) *, *(\d+)\)", line)[0]
+    while i < len(lines):
+        if lines[i].startswith("HOOK("):
+            list_hook = []
+            while lines[i].startswith("HOOK("):
+                funct, placement, priority = re.findall(r"HOOK\((\w+) *, *(\w+) *, *(\d+)\)", lines[i])[0]
+                list_hook.append((funct, placement, priority))
+                i += 1
             name = re.findall(r".* (\w+)\(", lines[i+1])[0]
-            if funct not in hooks:
-                hooks[funct] = []
+            for funct, placement, priority in list_hook:
+                if funct not in hooks:
+                    hooks[funct] = []
 
-            assert placement in ["START", "END"], "HOOK placement should be either START or END"
-            assert funct != name, "HOOK function name should not be the same as the original function name"
+                assert placement in ["START", "END"], "HOOK placement should be either START or END"
+                assert funct != name, "HOOK function name should not be the same as the original function name"
 
-            hooks[funct].append({"placement": placement, "priority": int(priority), "name": name, "header": file.with_suffix(".h"), "pattern": re.compile(r".+ +"+funct+r"\(.*\) *{")})
+                hooks[funct].append({"placement": placement, "priority": int(priority), "name": name, "header": file.with_suffix(".h"), "pattern": re.compile(r".+ +"+funct+r"\(.*\) *{")})
         i += 1
     return hooks
 

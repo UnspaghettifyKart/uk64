@@ -1,8 +1,6 @@
 #include <ultra64.h>
-#include <debug.h>
-#include "all_variables.h"
-
-#if DVDL
+#include "debug_variable_display_list.h"
+#include "main.h"
 
 extern s32 gGlobalTimer;
 
@@ -76,5 +74,3 @@ variableWatchAttributes gMainVariableWatchList[] = {
 	},
 
 };
-
-#endif

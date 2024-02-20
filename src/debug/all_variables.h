@@ -54,7 +54,6 @@
 #include <config.h>
 #include <course.h>
 #include <course_offsets.h>
-#include <debug.h>
 #include <defines.h>
 #include <functions.h>
 #include <kart_attributes.h>

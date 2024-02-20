@@ -1,9 +1,11 @@
 #include <ultra64.h>
-#include <debug.h>
-#include "debug.inc.c"
+#include "debug.h"
+#include <hooks.h>
 #include <libc/stdio.h>
-
-#if DVDL
+#include "podium_ceremony_actors.h"
+#include "code_80280000.h"
+#include "menus.h"
+#include "code_80091750.h"
 
 u8 sDisplayListState = OK;
 
@@ -13,6 +15,25 @@ static void u64_to_string(variableWatchAttributes *, u32, u8);
 static u32 _strlen(const char *);
 static void _memcpy(char *, const char *, u32);
 
+HOOK(game_state_handler, START, 0)
+void dvdl_control(void) {
+	if ((gControllerOne->button & L_TRIG) &&
+		(gControllerOne->button & R_TRIG) &&
+		(gControllerOne->button & Z_TRIG) &&
+		(gControllerOne->button & A_BUTTON)) {
+			gGamestateNext = CREDITS_SEQUENCE;
+	} else if ((gControllerOne->button & L_TRIG) &&	
+		(gControllerOne->button & R_TRIG) &&
+		(gControllerOne->button & Z_TRIG) &&
+		(gControllerOne->button & B_BUTTON)) {
+			gGamestateNext = ENDING_SEQUENCE;
+	}
+}
+
+HOOK(func_80093E20, END, 0)
+HOOK(update_menus, END, 0)
+HOOK(func_80280038, END, 0)
+HOOK(func_80281540, END, 0)
 void display_dvdl(void) {
 	u32 variable;
 	u32 i, vNameLen;
@@ -247,5 +268,3 @@ static void _memcpy(char *destStr, const char *copyStr, u32 copySize) {
 		copyStr++;
 	}	
 }
-
-#endif

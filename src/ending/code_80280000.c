@@ -1,7 +1,6 @@
 #include <ultra64.h>
 #include <macros.h>
 #include <defines.h>
-#include <debug.h>
 #include <PR/gu.h>
 
 #include <main.h>
@@ -111,9 +110,6 @@ void credits_loop(void) {
         } else {
             func_80280000();
             func_80280038();
-#if DVDL
-			display_dvdl();
-#endif
             gDPFullSync(gDisplayListHead++);
             gSPEndDisplayList(gDisplayListHead++);
         }

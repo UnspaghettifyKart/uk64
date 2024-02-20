@@ -1,21 +1,17 @@
-#ifndef _DEBUG_H_
-#define _DEBUG_H_
+#ifndef _DEBUG_VARIABLE_DISPLAY_LIST_H_
+#define _DEBUG_VARIABLE_DISPLAY_LIST_H_
 
 #include <ultra64.h>
 #include <defines.h>
 
 /**
- * Debug Variable Display List (DVDL), display variables and address at runtime.
- * to enable it change DVDL to 1 or 0 to disable it
- * and compile with DEBUG=1 "make DEBUG=1".
+ * Debug Variable Display List, display variables and address at runtime.
  * To edit the variables displayed edit the structure array in src/debug/debug.inc.c.
  *
  * Additional features
  * Holding L + R + Z + A will start the creditis sequence.
  * Holding L + R + Z + B will start the ending sequence.
  */
-#define DVDL 0
-#if DVDL
 
 #define CHARACTER_BUFFER_SIZE 200 // size of the string buffer
 
@@ -71,7 +67,5 @@ extern variableWatchAttributes gMainVariableWatchList[];
  * the RSP is not initialized during that portion of the code.
  */
 void display_dvdl(void);
-
-#endif
 
 #endif
