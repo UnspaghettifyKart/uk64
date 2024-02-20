@@ -1,5 +1,5 @@
 #include <ultra64.h>
-#include "debug.h"
+#include "debug_variable_display_list.h"
 #include <hooks.h>
 #include <libc/stdio.h>
 #include "podium_ceremony_actors.h"
