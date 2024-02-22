@@ -23,7 +23,7 @@ jobs:
           Expand-Archive mips-tools-chain-windows.zip -DestinationPath mips-tools-chain-windows
           Copy-Item -Path mips-tools-chain-windows/mingw64 -Destination tools -Recurse
       - name: Build
-        shell: tools\mingw64\w64devkit.exe
         run: |
-          cp -r complementary_file/* .
-          make
+          Copy-Item -Path complementary_file/* -Destination . -Recurse
+          SET PATH=%PATH%;tools\mingw64\bin
+          "tools\mingw64\bin\sh.exe" -c "make"
