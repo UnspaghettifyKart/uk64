@@ -25,4 +25,4 @@ jobs:
       - name: Build
         run: |
           Copy-Item -Path complementary_file/* -Destination . -Recurse
-          python windows_build.py
+          python tools/windows_build.py
