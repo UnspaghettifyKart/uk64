@@ -1,4 +1,4 @@
-name: Linux Compile test
+name: Windows Compile test
 
 on:
   push:
