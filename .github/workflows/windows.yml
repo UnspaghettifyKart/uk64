@@ -26,4 +26,4 @@ jobs:
         run: |
           Copy-Item -Path complementary_file/* -Destination . -Recurse
           SET PATH=%PATH%;tools\mingw64\bin
-          "tools\mingw64\bin\sh.exe" -c "make"
+          tools\mingw64\bin\sh.exe -c "make"
