@@ -25,7 +25,7 @@ def get_hook_file(file:Path) -> dict[str, list[dict]]:
                 funct, placement, priority = re.findall(r"HOOK\((\w+) *, *(\w+) *, *(\d+)\)", lines[i])[0]
                 list_hook.append((funct, placement, priority))
                 i += 1
-            name = re.findall(r".* (\w+)\(", lines[i+1])[0]
+            name = re.findall(r".* (\w+)\(", lines[i])[0]
             for funct, placement, priority in list_hook:
                 if funct not in hooks:
                     hooks[funct] = []
@@ -60,7 +60,7 @@ def detect_make_hook(file:Path, hooks:dict[str, list[dict]], out:Path) -> bool:
     file_out:Path = out/file
     if modify:
         file_out.parent().mkdir(exist_ok=True)
-        with file_out.open("w") as f:
+        with file_out.open("w", encoding="utf-8") as f:
             f.writelines(lines)
 
     return modify
@@ -85,6 +85,9 @@ def apply_hook(line:str, hook:list[dict], func_name:str) -> list[str]:
     type_, args = re.findall(r"(.+) +\w+\((.*)\)", line)[0]
     args_without_type = ", ".join([remove_non_letter(arg.split(" ")[-1]) for arg in args.split(",")])
 
+    if args_without_type == "void":
+        args_without_type = ""
+
     lines_out.append(type_+" original_"+func_name+"("+args+");\n\n")
 
     lines_out.append(type_+" "+func_name+"("+args+") {\n")
@@ -101,7 +104,7 @@ def apply_hook(line:str, hook:list[dict], func_name:str) -> list[str]:
         ret_args = "&ret, "
 
     for hook in hook_start:
-        lines_out.append("    {}{}(&cancel, {});\n".format(prefix, hook["name"], args_without_type))
+        lines_out.append("    {}{}(&cancel{});\n".format(prefix, hook["name"], ", "+args_without_type if args_without_type != "" else ""))
         lines_out.append("    if (cancel) { return "+out+"; }\n")
 
     lines_out.append("    {}original_{}({});\n".format(prefix,func_name, args_without_type))
@@ -122,10 +125,10 @@ def mod_file_hook(directory:Path = Path("mods"), out:Path = Path("mod_file")):
     mods_settings = get_mods_settings()
     hooks = {}
     
-    for mod in os.listdir(directory.path):
-        if mod in mods_settings["disabled"]:
+    for mod in directory.iterdir():
+        if mod.name() in mods_settings["disabled"]:
             continue
-        hooks.update(get_hook(directory/mod))
+        hooks.update(get_hook(mod))
     
     hook_files = []
     

@@ -15,6 +15,8 @@
 
 #define LINKER_TRIG_TABLES 0x802BA370
 
+#define SEG_MODS           0x80400000
+
 // End of Jumper pak memory
 #define RDRAM_END         0x807FFFFF
 

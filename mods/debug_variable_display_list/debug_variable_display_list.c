@@ -6,6 +6,8 @@
 #include "code_80280000.h"
 #include "menus.h"
 #include "code_80091750.h"
+#include "data_segment2.h"
+#include "common_textures.h"
 
 u8 sDisplayListState = OK;
 
@@ -15,8 +17,8 @@ static void u64_to_string(variableWatchAttributes *, u32, u8);
 static u32 _strlen(const char *);
 static void _memcpy(char *, const char *, u32);
 
-HOOK(game_state_handler, START, 0)
-void dvdl_control(void) {
+HOOK(read_controllers, START, 0)
+void dvdl_control(bool* cancel) {
 	if ((gControllerOne->button & L_TRIG) &&
 		(gControllerOne->button & R_TRIG) &&
 		(gControllerOne->button & Z_TRIG) &&
@@ -26,21 +28,20 @@ void dvdl_control(void) {
 		(gControllerOne->button & R_TRIG) &&
 		(gControllerOne->button & Z_TRIG) &&
 		(gControllerOne->button & B_BUTTON)) {
-			gGamestateNext = ENDING_SEQUENCE;
+			gGamestateNext = CREDITS_SEQUENCE;
 	}
 }
 
-HOOK(func_80093E20, END, 0)
-HOOK(update_menus, END, 0)
-HOOK(func_80280038, END, 0)
-HOOK(func_80281540, END, 0)
-void display_dvdl(void) {
+HOOK(end_master_display_list, START, 0)
+void display_dvdl(bool* cancel) {
 	u32 variable;
 	u32 i, vNameLen;
-	u32 arraySize = sizeof(gMainVariableWatchList) / sizeof(variableWatchAttributes);
+	u32 arraySize = 9;
 	s32 text_y_possition = TEXT_Y_POSSITION;
 	u8 base;
 	char *vName, *cBuffer;
+
+	gDisplayListHead--;
 
 	load_debug_font();
 	for (i = 0; i < arraySize; i++) {

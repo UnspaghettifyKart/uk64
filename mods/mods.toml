@@ -1,4 +1,3 @@
 disabled = [
     "flycam",
-    "debug_variable_display_list"
 ]

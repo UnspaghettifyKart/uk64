@@ -79,14 +79,13 @@ SECTIONS
       #if DEBUG
          BUILD_DIR/src/os/osCartRomInit.o(.text);
          BUILD_DIR/src/debug/crash_screen_enhancement.o(.text);
-         BUILD_DIR/src/debug/debug.o(.text);
-         BUILD_DIR/src/os/sprintf.o(.text);
       BUILD_DIR/src/os/is_debug.o(.text);
       #endif
       BUILD_DIR/src/os/osCreateThread.o(.text);
       #ifdef VERSION_EU
          . += 0x40;
       #endif
+      BUILD_DIR/src/os/sprintf.o(.text);
       BUILD_DIR/src/os/osInitialize.o(.text);
       BUILD_DIR/src/os/osStartThread.o(.text);
       BUILD_DIR/src/os/osCreateViManager.o(.text);
@@ -234,13 +233,12 @@ SECTIONS
       BUILD_DIR/src/audio/effects.o(.data);
       #if DEBUG
          BUILD_DIR/src/debug/crash_screen_enhancement.o(.data);
-         BUILD_DIR/src/debug/debug.o(.data);
-         BUILD_DIR/src/os/sprintf.o(.data);
       #endif
       BUILD_DIR/src/audio/seqplayer.o(.data);
       BUILD_DIR/src/audio/external.o(.data);
       BUILD_DIR/src/audio/port_eu.o(.data);
       BUILD_DIR/src/audio/audio_session_presets.o(.data);
+      BUILD_DIR/src/os/sprintf.o(.data);
       BUILD_DIR/src/os/osInitialize.o(.data*);
       BUILD_DIR/src/os/osCreateViManager.o(.data);
       BUILD_DIR/src/os/osViTable.o(.data);
@@ -432,11 +430,6 @@ SECTIONS
       BUILD_DIR/src/ending/ceremony_and_credits.o(.bss);
    }
    END_NOLOAD(ending)
-
-   _modsSegmentNoloadSize = SIZEOF(.mods.noload) + 0x10;
-
-   _modsSegmentNoloadSizeHi = _modsSegmentNoloadSize >> 16;
-   _modsSegmentNoloadSizeLo = _modsSegmentNoloadSize & 0xFFFF;
    
    BEGIN_SEG(mods, SEG_MODS)
    {

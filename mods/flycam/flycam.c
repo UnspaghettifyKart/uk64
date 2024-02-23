@@ -55,7 +55,7 @@ u16 ignore_for_flycam(bool* cancel, UNUSED Player *player, UNUSED Camera *camera
 }
 
 HOOK(load_surface_map, END, 0)
-void over_load_surface_map(uintptr_t addr, struct UnkStruct_800DC5EC *arg1) {
+void over_load_surface_map(UNUSED uintptr_t addr, UNUSED struct UnkStruct_800DC5EC *arg1) {
     if (mod_isFlycam) {
         gDisplayListHead--; // remove gSPDisplayList(gDisplayListHead++, gfx[temp_v1]); instruction
         func_8029569C();

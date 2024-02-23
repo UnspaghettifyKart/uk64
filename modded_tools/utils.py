@@ -40,6 +40,9 @@ class Path:
     
     def parent(self) -> Path:
         return Path(os.path.dirname(self.path))
+    
+    def name(self) -> str:
+        return os.path.basename(self.path)
 
 def gen_header(file:str) -> str:
     """Generate header for file"""

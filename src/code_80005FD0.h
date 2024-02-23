@@ -5,6 +5,7 @@
 #include "camera.h"
 #include "waypoints.h"
 #include "common_textures.h"
+#include "defines.h"
 
 struct struct_801642D8 {
     /* 0x0 */ u16 unk0;

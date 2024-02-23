@@ -12,9 +12,8 @@ if __name__ == "__main__":
     c_file_list = []
     mod_directory = Path("mods")
     vanilla_directory = Path("vanilla")
-
     for mod in mod_directory.iterdir():
-        if mod in mods_settings["disabled"] or not mod.is_dir():
+        if mod.name() in mods_settings["disabled"] or not mod.is_dir():
             continue
         c_file_list += get_c_file_list(mod)
     

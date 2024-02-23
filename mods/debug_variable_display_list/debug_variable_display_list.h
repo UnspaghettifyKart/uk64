@@ -66,6 +66,6 @@ extern variableWatchAttributes gMainVariableWatchList[];
  * ending sequence and creditis. It does not display during loading time because
  * the RSP is not initialized during that portion of the code.
  */
-void display_dvdl(void);
+void display_dvdl(bool*);
 
 #endif
