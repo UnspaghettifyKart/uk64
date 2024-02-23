@@ -91,3 +91,8 @@ docs/html/*
 # Generated files
 mod_file/**/*.c
 mods/hook.txt
+
+# windows build
+mingw64/
+.ash_history
+!tools/ido-recomp/*/*
