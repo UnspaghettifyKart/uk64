@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['b_0',['B',['../structuObjMtx__t.html#a87aae46e87f2cb767e062ee1c5dc3841',1,'uObjMtx_t']]],
-  ['b_1',['b',['../unionuObjBg.html#a4c7b764ed0f65c46029a1af38ca912e7',1,'uObjBg']]],
+  ['b_0',['b',['../unionuObjBg.html#a4c7b764ed0f65c46029a1af38ca912e7',1,'uObjBg']]],
+  ['b_1',['B',['../structuObjMtx__t.html#a87aae46e87f2cb767e062ee1c5dc3841',1,'uObjMtx_t']]],
   ['backup_2',['backup',['../structSaveData.html#a2ff481cd3bd1a2837891600786ff1b48',1,'SaveData']]],
   ['badvaddr_3',['badvaddr',['../struct____OSThreadContext.html#a198bd5d346a218eb2a4bbc8e10b0d002',1,'__OSThreadContext']]],
   ['bananaid_4',['bananaId',['../structBananaActor.html#ab30bfa430265f8e869e8b3ebf8bb9d03',1,'BananaActor']]],
@@ -17,7 +17,7 @@ var searchData=
   ['bankdmamesg_14',['bankDmaMesg',['../structSequencePlayer.html#a90815565482fdf580a4f48ca8ce82945',1,'SequencePlayer']]],
   ['bankdmamesgqueue_15',['bankDmaMesgQueue',['../structSequencePlayer.html#abf02d430aba2730272525b3318a235e8',1,'SequencePlayer']]],
   ['bankdmaremaining_16',['bankDmaRemaining',['../structSequencePlayer.html#ac639ee0de983e3d3a0f590743a488520',1,'SequencePlayer']]],
-  ['bankid_17',['bankId',['../structUnkEntry.html#a8c88a228a0df928ae279985724731345',1,'UnkEntry::bankId'],['../structSequenceChannel.html#a4819816555a2774b5b6edf6f8292be79',1,'SequenceChannel::bankId'],['../structNoteSubEu.html#a332e1ad1597add36d263523b5eb9b5a8',1,'NoteSubEu::bankId']]],
+  ['bankid_17',['bankId',['../structUnkEntry.html#a8c88a228a0df928ae279985724731345',1,'UnkEntry::bankId'],['../structSequenceChannel.html#a4819816555a2774b5b6edf6f8292be79',1,'SequenceChannel::bankId'],['../structNoteSubEu.html#a332e1ad1597add36d263523b5eb9b5a8',1,'NoteSubEu::bankId'],['../structEuAudioCmd.html#a598fc34477c8c7d54816fcbd191aa13b',1,'EuAudioCmd::bankId']]],
   ['banks_18',['banks',['../struct____OSPackId.html#a010be96d2b4109e8fea9fb8b1d7d6fd6',1,'__OSPackId']]],
   ['banshee_5fboardwalk_5fdls_19',['banshee_boardwalk_dls',['../all__course__offsets_8h.html#a7f1c94a48d2dfa193946edb22aa8f8b0',1,'banshee_boardwalk_dls:&#160;course_offsets.inc.c'],['../banshee__boardwalk_2course__offsets_8inc_8c.html#a873865b698c1d70bf5f5651fb19f515a',1,'banshee_boardwalk_dls:&#160;course_offsets.inc.c']]],
   ['banshee_5fboardwalk_5ftextures_20',['banshee_boardwalk_textures',['../all__course__offsets_8h.html#a79dda7f2949ecf39db95bc8510bf05a1',1,'banshee_boardwalk_textures:&#160;course_offsets.inc.c'],['../banshee__boardwalk_2course__offsets_8inc_8c.html#a36fcf7815972787a3c73939f3ff484fd',1,'banshee_boardwalk_textures:&#160;course_offsets.inc.c'],['../courseTable_8h.html#afe060a5daafc4fffae3c7e80a17aab9b',1,'banshee_boardwalk_textures:&#160;course_offsets.inc.c']]],
