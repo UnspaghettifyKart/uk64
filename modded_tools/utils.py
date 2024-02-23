@@ -25,6 +25,7 @@ class Path:
     
     def all_file_end(self, end:str) -> Generator[Path, Any, None]:
         for root, _, files in os.walk(self.path):
+            root = root.replace("\\", "/")
             for file in files:
                 if file.endswith(end):
                     yield Path(root+"/"+file)

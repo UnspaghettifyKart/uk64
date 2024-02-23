@@ -138,4 +138,5 @@ def mod_file_hook(directory:Path = Path("mods"), out:Path = Path("mod_file")):
 
     with (directory/'hook.txt').open("w") as f:
         for file in hook_files:
+            print(str(file[0])+","+str(file[1])+"\n")
             f.write(str(file[0])+","+str(file[1])+"\n")

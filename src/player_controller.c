@@ -1309,7 +1309,7 @@ void func_8002A8A4(Player *player, s8 arg1) {
 }
 
 void func_8002AA50(Player *player) {
-    player->kartHopJerk = gKartHopJerkTable[player->characterId];
+    player->kartHopJerk = -gKartHopJerkTable[player->characterId];
     player->kartHopAcceleration = 0.0f;
     player->kartHopVelocity = gKartHopInitialVelocityTable[player->characterId];
     player->effects |= 2;
@@ -1336,7 +1336,7 @@ void func_8002AA50(Player *player) {
   * kartHopAcceleration is restricted to values in [-9.0f, 9.0f]
 **/
 void func_8002AAC0(Player *player) {
-    player->kartHopAcceleration += player->kartHopJerk;
+    player->kartHopAcceleration -= player->kartHopJerk;
     if (player->kartHopAcceleration >= 9.0f) {
         player->kartHopAcceleration = 9.0f;
     }
