@@ -204,7 +204,10 @@ INCLUDE_DIRS   := include mods vanilla
 # Directories containing source files
 SRC_DIRS       := src src/data src/racing src/ending src/audio src/debug src/os src/os/math courses
 # add mod_file subdirectories
-SRC_DIRS	   += $(shell find mod_file/ -type d)
+MODS_DIRS	   := $(shell find mod_file/ -type d)
+GLOBAL_ASM_MODS_C_FILES   != grep -rl 'GLOBAL_ASM(' $(shell find mod_file/ -name "*.c")
+GLOBAL_ASM_MODS_O_FILES   := $(foreach file,$(GLOBAL_ASM_MODS_C_FILES),$(BUILD_DIR)/$(file:.c=.o))
+SRC_DIRS	   += $(MODS_DIRS)
 ASM_DIRS       := asm asm/os asm/unused $(DATA_DIR) $(DATA_DIR)/sound_data $(DATA_DIR)/karts
 
 
@@ -574,6 +577,8 @@ $(GLOBAL_ASM_OS_O_FILES): CC := $(PYTHON) $(TOOLS_DIR)/asm_processor/build.py $(
 $(GLOBAL_ASM_AUDIO_O_FILES): CC := $(PYTHON) $(TOOLS_DIR)/asm_processor/build.py $(CC) -- $(AS) $(ASFLAGS) --
 
 $(GLOBAL_ASM_RACING_O_FILES): CC := $(PYTHON) $(TOOLS_DIR)/asm_processor/build.py $(CC) -- $(AS) $(ASFLAGS) --
+
+$(GLOBAL_ASM_MODS_O_FILES): CC := $(PYTHON) $(TOOLS_DIR)/asm_processor/build.py $(CC) -- $(AS) $(ASFLAGS) --
 
 #==============================================================================#
 # Libultra Definitions                                                         #
