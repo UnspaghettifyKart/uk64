@@ -672,7 +672,7 @@ LDFLAGS += -R $(BUILD_DIR)/src/data/common_textures.inc.elf
 #==============================================================================#
 
 # Run linker script through the C preprocessor
-$(BUILD_DIR)/$(LD_SCRIPT): $(LD_SCRIPT) mods/mods.toml
+$(BUILD_DIR)/$(LD_SCRIPT): $(LD_SCRIPT) mods/hook.txt
 	$(call print,Preprocessing linker script:,$<,$@)
 	$(V)$(CPP) $(CPPFLAGS) -DBUILD_DIR=$(BUILD_DIR) -MMD -MP -MT $@ -MF $@.d -o $@ $<
 
