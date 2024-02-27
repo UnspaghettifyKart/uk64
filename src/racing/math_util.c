@@ -1096,7 +1096,7 @@ s32 is_visible_between_angle(u16 arg0, u16 arg1, u16 arg2) {
     return 1;
 }
 
-#include "mods/flycam/flycam.h"
+
 
 /**
  * Determines whether an object is within the render distance of a camera.
@@ -1124,9 +1124,6 @@ f32 is_within_render_distance(Vec3f cameraPos, Vec3f objectPos, u16 orientationY
     UNUSED s32 pad2[3];
     u16 extended_fov = ((u16) fov * 0xB6);
 
-    if (mod_isFlycam) {
-        return 1.0f;
-    }
     distanceX = objectPos[0] - cameraPos[0];
     distanceX = distanceX * distanceX;
     if (maxDistance < distanceX) {

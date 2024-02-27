@@ -54,7 +54,7 @@ u16 ignore_for_flycam(bool* cancel, UNUSED Player *player, UNUSED Camera *camera
     }
 }
 
-// HOOK(is_within_render_distance, START, 0)
+HOOK(is_within_render_distance, START, 0)
 f32 ignore_render_distance(bool* cancel, UNUSED Vec3f cameraPos, UNUSED Vec3f objectPos, UNUSED u16 orientationY, UNUSED f32 minDistance, UNUSED f32 fov, UNUSED f32 maxDistance){
     if (mod_isFlycam) {
         *cancel = TRUE;
