@@ -457,7 +457,9 @@ void display_and_vsync(void) {
     osRecvMesg(&gGfxVblankQueue, &gMainReceivedMesg, OS_MESG_BLOCK);
     exec_display_list(&gGfxPool->spTask);
     profiler_log_thread5_time(AFTER_DISPLAY_LISTS);
-    osRecvMesg(&gGameVblankQueue, &gMainReceivedMesg, OS_MESG_BLOCK);
+    if (gMainMenuSelectionDepth == 0) {
+        osRecvMesg(&gGameVblankQueue, &gMainReceivedMesg, OS_MESG_BLOCK);
+    }
     osViSwapBuffer((void *) PHYSICAL_TO_VIRTUAL(gPhysicalFramebuffers[sRenderedFramebuffer]));
     profiler_log_thread5_time(THREAD5_END);
     osRecvMesg(&gGameVblankQueue, &gMainReceivedMesg, OS_MESG_BLOCK);
@@ -564,6 +566,46 @@ void game_init_clear_framebuffer(void) {
     clear_framebuffer(0);
 }
 
+s32 calculate_updaterate(void) {
+    static u32 prevtime = 0;
+    static u32 remainder = 0;
+    static u32 gSkipUpdate;
+    s32 total;
+    s32 rate;
+
+    u32 now = osGetCount();
+    if (gSkipUpdate) {
+        remainder = 0;
+        rate = 1;
+        gSkipUpdate = FALSE;
+    } else {
+        if (now > prevtime) {
+            total = (now - prevtime) + remainder;
+        } else {
+                // Counter has reset since last time
+            total = (0xffffffff - prevtime) + 1 + now + remainder;
+        }
+
+        if (total < (OS_CPU_COUNTER / 30)) { // 30-60 fps
+            rate = 1;
+        } else if (total < (OS_CPU_COUNTER / 20)) { // 20-30 fps
+            rate = 2;
+        } else {
+            rate = 3;
+        }
+
+        remainder = total - rate * (OS_CPU_COUNTER / 60);
+    }
+
+    prevtime = now;
+
+    if (gGamestate != RACING) {
+        gSkipUpdate = TRUE;
+    }
+
+    return rate;
+}
+
 void race_logic_loop(void) {
     s16 i;
     u16 rotY;
@@ -587,7 +629,6 @@ void race_logic_loop(void) {
 
     switch(gActiveScreenMode) {
         case SCREEN_MODE_1P:
-            gTickSpeed = 2;
             staff_ghosts_loop();
             if (gIsGamePaused == 0) {
                 for (i = 0; i < gTickSpeed; i++) {
@@ -649,11 +690,6 @@ void race_logic_loop(void) {
             break;
 
         case SCREEN_MODE_2P_SPLITSCREEN_VERTICAL:
-            if (gCurrentCourseId == COURSE_DK_JUNGLE) {
-                gTickSpeed = 3;
-            } else {
-                gTickSpeed = 2;
-            }
             if (gIsGamePaused == 0) {
                     for (i = 0; i < gTickSpeed; i++) {
                         if (D_8015011E != 0) {
@@ -693,13 +729,6 @@ void race_logic_loop(void) {
             break;
 
         case SCREEN_MODE_2P_SPLITSCREEN_HORIZONTAL:
-
-            if (gCurrentCourseId == COURSE_DK_JUNGLE) {
-                gTickSpeed = 3;
-            } else {
-                gTickSpeed = 2;
-            }
-
             if (gIsGamePaused == 0) {
                     for (i = 0; i < gTickSpeed; i++) {
                         if (D_8015011E != 0) {
@@ -740,34 +769,6 @@ void race_logic_loop(void) {
             break;
 
         case SCREEN_MODE_3P_4P_SPLITSCREEN:
-            if (gPlayerCountSelection1 == 3) {
-                switch(gCurrentCourseId) {
-                    case COURSE_BOWSER_CASTLE:
-                    case COURSE_MOO_MOO_FARM:
-                    case COURSE_SKYSCRAPER:
-                    case COURSE_DK_JUNGLE:
-                        gTickSpeed = 3;
-                        break;
-                    default:
-                        gTickSpeed = 2;
-                        break;
-                }
-            } else {
-                // Four players
-                switch(gCurrentCourseId) {
-                    case COURSE_BLOCK_FORT:
-                    case COURSE_DOUBLE_DECK:
-                    case COURSE_BIG_DONUT:
-                        gTickSpeed = 2;
-                        break;
-                    case COURSE_DK_JUNGLE:
-                        gTickSpeed = 4;
-                        break;
-                    default:
-                        gTickSpeed = 3;
-                        break;
-                }
-            }
             if (gIsGamePaused == 0) {
                 for (i = 0; i < gTickSpeed; i++) {
                     if (D_8015011E != 0) {
@@ -1191,6 +1192,7 @@ void thread5_game_loop(UNUSED void *arg) {
     func_800C5CB8();
 
     while(TRUE) {
+        gTickSpeed = calculate_updaterate();
         func_800CB2C4();
 
         // Update the gamestate if it has changed (racing, menus, credits, etc.).
