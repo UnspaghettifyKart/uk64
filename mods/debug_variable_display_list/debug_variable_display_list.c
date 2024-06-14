@@ -17,7 +17,7 @@ static void u64_to_string(variableWatchAttributes *, u32, u8);
 static u32 _strlen(const char *);
 static void _memcpy(char *, const char *, u32);
 
-HOOK(read_controllers, START, 0)
+HOOK(read_controllers, AT(FUNCTION_CALL), 0)
 void dvdl_control(bool* cancel) {
 	if ((gControllerOne->button & L_TRIG) &&
 		(gControllerOne->button & R_TRIG) &&
@@ -32,7 +32,7 @@ void dvdl_control(bool* cancel) {
 	}
 }
 
-HOOK(end_master_display_list, START, 0)
+HOOK(end_master_display_list, AT(FUNCTION_CALL), 0)
 void display_dvdl(bool* cancel) {
 	u32 variable;
 	u32 i, vNameLen;

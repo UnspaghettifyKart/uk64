@@ -159,12 +159,6 @@ ifeq ($(DUMMY),FAIL)
   $(error Unable to find python)
 endif
 
-LOGS != $(PYTHON) modded_tools
-$(info Mods: $(LOGS))
-ifeq ($(LOGS),)
-  $(error Failed to load mods)
-endif
-
 ifeq ($(filter clean distclean print-%,$(MAKECMDGOALS)),)
 
  # Make tools if out of date
@@ -199,15 +193,10 @@ LD_SCRIPT      := mk64.ld
 ASSET_DIR      := assets
 BIN_DIR        := bin
 DATA_DIR       := data
-INCLUDE_DIRS   := include mods vanilla
+INCLUDE_DIRS   := include vanilla
 
 # Directories containing source files
 SRC_DIRS       := src src/data src/racing src/ending src/audio src/debug src/os src/os/math courses
-# add mod_file subdirectories
-MODS_DIRS	   := $(shell find mod_file/ -type d)
-GLOBAL_ASM_MODS_C_FILES   != grep -rl 'GLOBAL_ASM(' $(shell find mod_file/ -name "*.c")
-GLOBAL_ASM_MODS_O_FILES   := $(foreach file,$(GLOBAL_ASM_MODS_C_FILES),$(BUILD_DIR)/$(file:.c=.o))
-SRC_DIRS	   += $(MODS_DIRS)
 ASM_DIRS       := asm asm/os asm/unused $(DATA_DIR) $(DATA_DIR)/sound_data $(DATA_DIR)/karts
 
 
@@ -238,6 +227,12 @@ O_FILES := \
   $(foreach file,$(COURSE_FILES),$(BUILD_DIR)/$(file:.c=.o)) \
   $(foreach file,$(S_FILES),$(BUILD_DIR)/$(file:.s=.o)) \
   $(EUC_JP_FILES:%.c=$(BUILD_DIR)/%.jp.o)
+
+MODS_DIR := mods
+
+MOD_MAKE_INCLUDES := $(shell find $(MODS_DIR) -type f -name "mod.mk")
+
+$(foreach inc,$(MOD_MAKE_INCLUDES),$(eval include $(inc)))
 
 # Automatic dependency files
 DEP_FILES := $(O_FILES:.o=.d) $(BUILD_DIR)/$(LD_SCRIPT).d
@@ -389,7 +384,7 @@ doc:
 	@$(PRINT) "$(GREEN)Documentation generated in docs/html$(NO_COL)\n"
 	@$(PRINT) "$(GREEN)Results can be viewed by opening docs/html/index.html in a web browser$(NO_COL)\n"
 
-clean: distclean
+clean:
 	$(RM) -r $(BUILD_DIR)
 
 distclean: distclean_assets
@@ -556,8 +551,8 @@ $(BUILD_DIR)/%.jp.c: %.c
 
 $(BUILD_DIR)/%.o: %.c
 	$(call print,Compiling:,$<,$@)
-	$(V)$(CC_CHECK) $(CC_CHECK_CFLAGS) -MMD -MP -MT $@ -MF $(BUILD_DIR)/$*.d $<
-	$(V)$(CC) -c $(CFLAGS) -o $@ $<
+	$(CC_CHECK) $(CC_CHECK_CFLAGS) -MMD -MP -MT $@ -MF $(BUILD_DIR)/$*.d $<
+	$(CC) -c $(CFLAGS) -o $@ $<
 	$(PYTHON) $(TOOLS_DIR)/set_o32abi_bit.py $@
 
 $(BUILD_DIR)/%.o: $(BUILD_DIR)/%.c
@@ -672,13 +667,12 @@ LDFLAGS += -R $(BUILD_DIR)/src/data/common_textures.inc.elf
 #==============================================================================#
 
 # Run linker script through the C preprocessor
-$(BUILD_DIR)/$(LD_SCRIPT): $(LD_SCRIPT) mods/hook.txt
+$(BUILD_DIR)/$(LD_SCRIPT): $(LD_SCRIPT)
 	$(call print,Preprocessing linker script:,$<,$@)
 	$(V)$(CPP) $(CPPFLAGS) -DBUILD_DIR=$(BUILD_DIR) -MMD -MP -MT $@ -MF $@.d -o $@ $<
 
 # Link MK64 ELF file
 $(ELF): $(O_FILES) $(COURSE_DATA_TARGETS) $(BUILD_DIR)/$(LD_SCRIPT) $(BUILD_DIR)/src/data/startup_logo.inc.mio0.o $(BUILD_DIR)/src/ending/ceremony_data.inc.mio0.o $(BUILD_DIR)/src/data/common_textures.inc.mio0.o $(COURSE_GEOGRAPHY_TARGETS) undefined_syms.txt
-	$(PYTHON) modded_tools/hooks/post.py mods/hook.txt $(BUILD_DIR)/$(LD_SCRIPT)
 	@$(PRINT) "$(GREEN)Linking ELF file:  $(BLUE)$@ $(NO_COL)\n"
 	$(V)$(LD) $(LDFLAGS) -o $@
 
@@ -707,3 +701,7 @@ MAKEFLAGS += --no-builtin-rules
 
 
 print-% : ; $(info $* is a $(flavor $*) variable set to [$($*)]) @true
+
+# MODS
+
+CC := ./tools/hooks $(CC)

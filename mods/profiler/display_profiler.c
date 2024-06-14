@@ -9,7 +9,7 @@
 
 static u8 digit[] = "0123456789abcdef";
 
-HOOK(end_master_display_list, START, 0)
+HOOK(end_master_display_list, AT(FUNCTION_CALL), 0)
 void display_profiler(bool* cancel) {
     u32 vNameLen;
     char vName[] = "Profiler :";
@@ -20,7 +20,7 @@ void display_profiler(bool* cancel) {
 
     gDisplayListHead--;
     index = D_800DC668^1;
-    deltaTime = gProfilerFrameData[index].gameTimes[AFTER_DISPLAY_LISTS] - gProfilerFrameData[index].gameTimes[THREAD5_START];
+    deltaTime = gProfilerFrameData[index].gameTimes[AFTER_DISPLAY_LISTS] - gProfilerFrameData[index].gameTimes[THREAD5_AT(FUNCTION_CALL)];
     s32_to_string(cBuffer, OS_CYCLES_TO_USEC(deltaTime), DECIMAL);
 	load_debug_font();
 

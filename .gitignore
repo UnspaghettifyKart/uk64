@@ -90,7 +90,7 @@ docs/html/*
 
 # Generated files
 mod_file/**/*.c
-mods/hook.txt
+hook.bin
 
 # windows build
 mingw64/

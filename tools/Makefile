@@ -30,6 +30,7 @@ extract_data_for_mio_SOURCES := extract_data_for_mio.c
 
 # Build tools and recomp
 all: $(PROGRAMS)
+	gcc -o hooks hook/main.c hook/list.c -Wall -Wextra -Wno-unused-parameter -O2
 
 # Remove generated files
 clean:
