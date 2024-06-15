@@ -436,6 +436,7 @@ SECTIONS
       /* BUILD_DIR/mod_file/files.o(.text)
       BUILD_DIR/mod_file/files.o(.data)
       BUILD_DIR/mod_file/files.o(.rodata) */
+      MODS_SEGMENT
       . = ALIGN(0x10);
    }
    END_SEG(mods)
@@ -443,6 +444,7 @@ SECTIONS
    BEGIN_NOLOAD(mods)
    {
       /* BUILD_DIR/mod_file/files.o(.bss) */
+      MODS_SEGMENT_BSS
       . = ALIGN(0x10);
    }
    END_NOLOAD(mods)

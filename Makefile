@@ -213,6 +213,17 @@ ALL_DIRS = $(BUILD_DIR) $(addprefix $(BUILD_DIR)/,$(SRC_DIRS) $(COURSE_DIRS) inc
 MAKEFILE_SPLIT = Makefile.split
 include $(MAKEFILE_SPLIT)
 
+ifneq ($(shell find src -type f -name '*.o' -delete),)
+  $(error Failed to remove out.c files in src)
+endif
+
+ifneq ($(shell find mods -type f -name '*.o' -delete),)
+  $(error Failed to remove out.c files in mods)
+endif
+
+MODS_SEGMENT :=
+MODS_SEGMENT_BSS :=
+
 # These are files that need to be encoded into EUC-JP in order for the ROM to match
 # We filter them out from the regular C_FILES since we don't need nor want the
 # UTF-8 versions getting compiled
@@ -669,7 +680,7 @@ LDFLAGS += -R $(BUILD_DIR)/src/data/common_textures.inc.elf
 # Run linker script through the C preprocessor
 $(BUILD_DIR)/$(LD_SCRIPT): $(LD_SCRIPT)
 	$(call print,Preprocessing linker script:,$<,$@)
-	$(V)$(CPP) $(CPPFLAGS) -DBUILD_DIR=$(BUILD_DIR) -MMD -MP -MT $@ -MF $@.d -o $@ $<
+	$(CPP) $(CPPFLAGS) -DBUILD_DIR=$(BUILD_DIR) -MMD -MP -MT $@ -MF $@.d -o $@ $< -DMODS_SEGMENT="$(MODS_SEGMENT)" -DMODS_SEGMENT_BSS="$(MODS_SEGMENT_BSS)"
 
 # Link MK64 ELF file
 $(ELF): $(O_FILES) $(COURSE_DATA_TARGETS) $(BUILD_DIR)/$(LD_SCRIPT) $(BUILD_DIR)/src/data/startup_logo.inc.mio0.o $(BUILD_DIR)/src/ending/ceremony_data.inc.mio0.o $(BUILD_DIR)/src/data/common_textures.inc.mio0.o $(COURSE_GEOGRAPHY_TARGETS) undefined_syms.txt

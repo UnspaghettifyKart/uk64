@@ -14,7 +14,7 @@
 #include "code_80057C60.h"
 #include "code_80005FD0.h"
 #include "code_800029B0.h"
-#include <hooks.h>
+#include <hook.h>
 #include "render_player.h"
 #include "render_courses.h"
 
@@ -46,23 +46,23 @@ void flycam_move_camera_up(Camera* camera, struct Controller *controller, f32 di
 void flycam_save_state(Camera *camera);
 void flycam_load_state(Camera *camera);
 
-HOOK("src/render_player.c", check_player_camera_collision, AT(FUNCTION_CALL))
-u16 ignore_for_flycam(bool* cancel, UNUSED Player *player, UNUSED Camera *camera, UNUSED f32 arg2, UNUSED f32 arg3) {
+HOOK("src/render_player.c", check_player_camera_collision, AT(FUNCTION_CALL), TRUE, 0)
+u16 ignore_for_flycam(bool* cancel) {
     if (mod_isFlycam) {
         *cancel = TRUE;
         return TRUE;
     }
 }
 
-HOOK("src/racing/math_util.c", is_within_render_distance, AT(FUNCTION_CALL))
-f32 ignore_render_distance(bool* cancel, UNUSED Vec3f cameraPos, UNUSED Vec3f objectPos, UNUSED u16 orientationY, UNUSED f32 minDistance, UNUSED f32 fov, UNUSED f32 maxDistance){
+HOOK("src/racing/math_util.c", is_within_render_distance, AT(FUNCTION_CALL), TRUE, 0)
+f32 ignore_render_distance(bool* cancel){
     if (mod_isFlycam) {
         *cancel = TRUE;
         return 1.0;
     }
 }
 
-HOOK("src/racing/render_courses.c", load_surface_map, AT(FUNCTION_RETURN))
+HOOK("src/racing/render_courses.c", load_surface_map, AT(FUNCTION_RETURN), FALSE, 0)
 void over_load_surface_map(UNUSED uintptr_t addr, UNUSED struct UnkStruct_800DC5EC *arg1) {
     if (mod_isFlycam) {
         gDisplayListHead--; // remove gSPDisplayList(gDisplayListHead++, gfx[temp_v1]); instruction
@@ -94,8 +94,8 @@ void over_load_surface_map(UNUSED uintptr_t addr, UNUSED struct UnkStruct_800DC5
  * Camera mode 2: Enter flycam at previous flycam spot
  * 
 */
-HOOK("src/camera.c", func_8001E45C, AT(FUNCTION_CALL))
-void flycam(bool* cancel, Camera *camera, Player *player, UNUSED s8 index) {
+HOOK("src/camera.c", func_8001E45C, AT(FUNCTION_CALL), TRUE, 0)
+void flycam(Camera *camera, Player *player, UNUSED s8 index, bool* cancel) {
     struct Controller *controller = &gControllers[0];
     if (controller->buttonPressed & L_TRIG && last_pressed != (controller->buttonPressed & L_TRIG)) {
         last_pressed = controller->buttonPressed & L_TRIG;

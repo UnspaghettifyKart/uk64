@@ -3,8 +3,8 @@
 #include <ultra64.h>
 #include <defines.h>
 
-void flycam(bool*,Camera *, Player *, s8);
+void flycam(Camera *, Player *, s8, bool*);
 void over_load_surface_map(uintptr_t, struct UnkStruct_800DC5EC *);
-u16 ignore_for_flycam(bool*, Player *, Camera *, f32, f32);
+u16 ignore_for_flycam(bool*);
 extern u32 mod_isFlycam;
 #endif
