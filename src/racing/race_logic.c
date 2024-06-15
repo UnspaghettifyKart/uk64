@@ -1,8 +1,7 @@
 #include <ultra64.h>
 #include <macros.h>
-#include <types.h>
+#include <mk64.h>
 #include <common_structs.h>
-#include <config.h>
 #include <defines.h>
 #include <sounds.h>
 #include "camera.h"
@@ -11,7 +10,7 @@
 #include "main.h"
 #include "code_800029B0.h"
 #include "code_80057C60.h"
-#include "code_80071F00.h"
+#include "update_objects.h"
 #include "code_80091750.h"
 #include "code_80005FD0.h"
 #include "spawn_players.h"
@@ -534,7 +533,7 @@ void func_8028EF28(void) {
                     func_8028EEF0(i);
 
                     currentPosition = gPlayers[i].currentRank;
-                    gPlayers[i].type |= PLAYER_CPU;
+                    gPlayers[i].type |= PLAYER_KART_AI;
 
                     if (currentPosition < 4) {
                         D_80150120 = 1;
@@ -573,7 +572,7 @@ void func_8028EF28(void) {
                                 D_800DC510 = 5;
                                 i = gPlayerPositionLUT[1];
                                 gPlayers[i].soundEffects |= 0x200000;
-                                gPlayers[i].type |= PLAYER_CPU;
+                                gPlayers[i].type |= PLAYER_KART_AI;
                                 func_800CA118((u8)i);
                                 break;
                             case 3:
@@ -591,7 +590,7 @@ void func_8028EF28(void) {
                                         *(gNmiUnknown2 + i * 3 + 2) = 99;
                                     }
                                     gPlayers[i].soundEffects |= 0x200000;
-                                    gPlayers[i].type |= PLAYER_CPU;
+                                    gPlayers[i].type |= PLAYER_KART_AI;
                                     func_800CA118((u8)i);
                                 }
                                 break;
@@ -606,7 +605,7 @@ void func_8028EF28(void) {
                                     D_800DC510 = 5;
                                     i = gPlayerPositionLUT[3];
                                     gPlayers[i].soundEffects |= 0x200000;
-                                    gPlayers[i].type |= PLAYER_CPU;
+                                    gPlayers[i].type |= PLAYER_KART_AI;
                                     func_800CA118((u8)i);
                                 }
                                 break;
@@ -670,7 +669,7 @@ void func_8028F474(void) {
             }
         case 1:
         case 2:
-            func_800097E0();
+            update_vehicles();
             break;
     }
 }
@@ -801,7 +800,7 @@ void func_8028F970(void) {
         struct Controller *controller = &gControllers[i];
 
         if (!(player->type & PLAYER_HUMAN)) { continue; }
-        if (player->type & PLAYER_CPU) { continue; }
+        if (player->type & PLAYER_KART_AI) { continue; }
 
         if (gActiveScreenMode != SCREEN_MODE_3P_4P_SPLITSCREEN) {
             if ((controller->buttonPressed & L_TRIG) && !(controller->button & R_TRIG)) {

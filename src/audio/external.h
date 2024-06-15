@@ -52,7 +52,7 @@ struct Sound {
     /* 0x09 */ // u8  compilerPadding0[3];
 	/* 0x0C */ f32 *unk0C;
 	/* 0x10 */ f32 *unk10;
-	/* 0x14 */ u8  *unk14;
+	/* 0x14 */ s8  *unk14;
 }; // size = 0x18
 
 struct Unk_800E9F7C {
@@ -126,13 +126,13 @@ struct Unk_800EA06C {
 
 typedef struct {
 	/* 0x00 */ f32 unk_00;
-	/* 0x04 */ u16 unk_04;
+	/* 0x04 */ f32 unk_04;
     /* 0x06 */ // u16 compilerPadding;
 	/* 0x08 */ f32 unk_08;
 	/* 0x0C */ u16 unk_0C;
     /* 0x0E */ // u16 compilerPadding;
 	/* 0x10 */ f32 unk_10;
-	/* 0x14 */ u16 unk_14;
+	/* 0x14 */ f32 unk_14;
     /* 0x16 */ // u16 compilerPadding;
 	/* 0x18 */ f32 unk_18;
 	/* 0x1C */ u16 unk_1C;
@@ -150,12 +150,12 @@ typedef struct {
     /* 0x011 */ u8  unk_011;
     /* 0x012 */ u8  unk_012;
     /* 0x013 */ u8  unk_013;
-    /* 0x014 */ s32 unk_014;
+    /* 0x014 */ u32 unk_014;
     /* 0x018 */ u16 unk_018;
     /* 0x01A */ u16 unk_01A;
-    /* 0x01C */ s32 unk_01C;
-    /* 0x020 */ s32 unk_020;
-    /* 0x024 */ s32 unk_024;
+    /* 0x01C */ f32 unk_01C;
+    /* 0x020 */ f32 unk_020;
+    /* 0x024 */ f32 unk_024;
     /* 0x028 */ u16 unk_028;
     /* 0x02A */ u16 unk_02A;
     /* 0x02C */ u32 unk_02C[5]; // Array size guessed
@@ -187,6 +187,11 @@ typedef struct {
     u8  unk8;
     u8  unk9;
 } UnkStruct8018EF18; // size = 0xC
+
+typedef struct {
+	u8 thing0;
+	u8 thing1;
+} struct_D_80192CA8_entry;
 
 /** @cond */
 
@@ -224,7 +229,7 @@ void func_800C3F70(void);
 void func_800C400C(void);
 void func_800C4084(u16);
 void func_800C40F0(u8);
-void play_sound(u32, Vec3f*, u8, f32*, f32*, u8*);
+void play_sound(u32, Vec3f*, u8, f32*, f32*, s8*);
 void func_800C41CC(u8, struct SoundCharacteristics*);
 void func_800C4398(void);
 void delete_sound_from_bank(u8, u8);
@@ -342,7 +347,7 @@ extern u8 D_80192AB8[SOUND_BANK_COUNT][8][8];
 extern u8 D_80192C38;
 extern u8 sSoundBankDisabled[SOUND_BANK_COUNT];
 extern struct ChannelVolumeScaleFade D_80192C48[SOUND_BANK_COUNT];
-extern u8 D_80192CA8[3][10];
+extern struct_D_80192CA8_entry D_80192CA8[3][5];
 extern u8  D_80192CC6[3];
 extern u32 D_80192CD0[256];
 extern struct_D_801930D0_entry D_801930D0[3];

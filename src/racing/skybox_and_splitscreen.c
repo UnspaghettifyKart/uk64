@@ -1,15 +1,14 @@
 #include <ultra64.h>
 #include <macros.h>
 #include <PR/gbi.h>
-#include <types.h>
-#include <config.h>
+#include <mk64.h>
 
 #include "skybox_and_splitscreen.h"
 #include "code_800029B0.h"
 #include <common_structs.h>
 #include "memory.h"
 #include "camera.h"
-#include "common_textures.h"
+#include <assets/common_data.h>
 #include "render_player.h"
 #include "code_80057C60.h"
 #include "code_80091750.h"
@@ -177,8 +176,8 @@ void func_802A39E0(struct UnkStruct_800DC5EC *arg0) {
 
     gDPPipeSync(gDisplayListHead++);
     gDPSetCycleType(gDisplayListHead++, G_CYC_FILL);
-    gDPSetDepthImage(gDisplayListHead++, D_801502B4);
-    gDPSetColorImage(gDisplayListHead++, G_IM_FMT_RGBA, G_IM_SIZ_16b, SCREEN_WIDTH, D_801502B4);
+    gDPSetDepthImage(gDisplayListHead++, gPhysicalZBuffer);
+    gDPSetColorImage(gDisplayListHead++, G_IM_FMT_RGBA, G_IM_SIZ_16b, SCREEN_WIDTH, gPhysicalZBuffer);
     gDPSetFillColor(gDisplayListHead++, 0xFFFCFFFC);
     gDPPipeSync(gDisplayListHead++);
     gDPSetScissor(gDisplayListHead++, G_SC_NON_INTERLACE, ulx, uly, lrx, lry);
@@ -197,8 +196,8 @@ void func_802A39E0(struct UnkStruct_800DC5EC *arg0) {
 void init_z_buffer(void) {
     gDPPipeSync(gDisplayListHead++);
     gDPSetCycleType(gDisplayListHead++, G_CYC_FILL);
-    gDPSetDepthImage(gDisplayListHead++, D_801502B4);
-    gDPSetColorImage(gDisplayListHead++, G_IM_FMT_RGBA, G_IM_SIZ_16b, SCREEN_WIDTH, D_801502B4);
+    gDPSetDepthImage(gDisplayListHead++, gPhysicalZBuffer);
+    gDPSetColorImage(gDisplayListHead++, G_IM_FMT_RGBA, G_IM_SIZ_16b, SCREEN_WIDTH, gPhysicalZBuffer);
     gDPSetFillColor(gDisplayListHead++, 0xFFFCFFFC);
     gDPPipeSync(gDisplayListHead++);
     gDPSetScissor(gDisplayListHead++, G_SC_NON_INTERLACE, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -310,60 +309,48 @@ struct Skybox {
     s16 unkA;
 };
 
-// unreferenced F3D. Perhaps goes in an unused func?
-s32 D_802B8A90[] = {
-    0xe7000000, 0x00000000, 0xb900031d, 0x0f0a4000,
-    0xba001402, 0x00300000, 0xf7000000, 0x00000000,
-    0xf64fc3bc, 0x00000000, 0xe7000000, 0x00000000,
-    0xba001402, 0x00000000, 0xb8000000, 0x00000000,
+UNUSED Gfx D_802B8A90[] = {
+    gsDPPipeSync(),
+    gsDPSetRenderMode(G_RM_OPA_SURF, G_RM_OPA_SURF2),
+    gsDPSetCycleType(G_CYC_FILL),
+    gsDPSetFillColor(0x00000000),
+    gsDPFillRectangle(0, 0, 319, 239),
+    gsDPPipeSync(),
+    gsDPSetCycleType(G_CYC_1CYCLE),
+    gsSPEndDisplayList(),
 };
 
-struct Skybox sSkyColors[21] = {
-    {128, 4280, 6136, 216, 7144, 32248},
-    {255, 255, 255, 255, 255, 255},
-    {48, 1544, 49528, 0, 0, 0},
-    {0, 0, 0, 0, 0, 0},
-    {113, 70, 255, 255, 184, 99},
-    {28, 11, 90, 0, 99, 164},
-    {48, 1688, 54136, 216, 7144, 32248},
-    {238, 144, 255, 255, 224, 240},
-    {128, 4280, 6136, 216, 7144, 32248},
-    {0, 18, 255, 197, 211, 255},
-    {0, 2, 94, 209, 65, 23},
-    {195, 231, 255, 255, 0xc0, 0},
-    {128, 4280, 6136, 216, 7144, 32248},
-    {0, 0, 0, 0, 0, 0},
-    {20, 30, 56, 40, 60, 110},
-    {128, 4280, 6136, 216, 7144, 32248},
-    {0, 0, 0, 0, 0, 0},
-    {113, 70, 255, 255, 184, 99},
-    {255, 174, 0, 255, 229, 124},
-    {0, 0, 0, 0, 0, 0},
-    {238, 144, 255, 255, 224, 240},
+struct Skybox sSkyColors[] = {
+    #include "assets/course_metadata/sSkyColors.inc.c"
+
 };
 
-struct Skybox D_802B8BCC[21] = {
-    {0, 0, 0, 0, 0, 0},
-    {255, 255, 255, 255, 255, 255},
-    {0, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 0},
-    {95, 40, 15, 0, 0, 0},
-    {0, 99, 164, 0, 0, 0},
-    {48, 1688, 54136, 0, 0, 0},
-    {255, 224, 240, 0, 0, 0},
-    {216, 7144, 32248, 0, 0, 0},
-    {255, 184, 99, 0, 0, 0},
-    {209, 65, 23, 0, 0, 0},
-    {255, 192, 0, 0, 0, 0},
-    {216, 7144, 32248, 128, 4280, 6136},
-    {0, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 0},
-    {216, 7144, 32248, 0, 0, 0},
-    {0, 0, 0, 0, 0, 0},
-    {255, 224, 240, 0, 0, 0},
-    {22, 145, 22, 0, 0, 0},
-    {0, 0, 0, 0, 0, 0},
-    {255, 224, 240, 0, 0, 0},
+// struct Skybox sSkyColors[] = {
+//     {128, 4280, 6136, 216, 7144, 32248},
+//     {255, 255, 255, 255, 255, 255},
+//     {48, 1544, 49528, 0, 0, 0},
+//     {0, 0, 0, 0, 0, 0},
+//     {113, 70, 255, 255, 184, 99},
+//     {28, 11, 90, 0, 99, 164},
+//     {48, 1688, 54136, 216, 7144, 32248},
+//     {238, 144, 255, 255, 224, 240},
+//     {128, 4280, 6136, 216, 7144, 32248},
+//     {0, 18, 255, 197, 211, 255},
+//     {0, 2, 94, 209, 65, 23},
+//     {195, 231, 255, 255, 0xc0, 0},
+//     {128, 4280, 6136, 216, 7144, 32248},
+//     {0, 0, 0, 0, 0, 0},
+//     {20, 30, 56, 40, 60, 110},
+//     {128, 4280, 6136, 216, 7144, 32248},
+//     {0, 0, 0, 0, 0, 0},
+//     {113, 70, 255, 255, 184, 99},
+//     {255, 174, 0, 255, 229, 124},
+//     {0, 0, 0, 0, 0, 0},
+//     {238, 144, 255, 255, 224, 240},
+// };
+
+struct Skybox sSkyColors2[] = {
+    #include "assets/course_metadata/sSkyColors2.inc.c"
 };
 
 void func_802A450C(Vtx *skybox) {
@@ -415,18 +402,18 @@ void func_802A450C(Vtx *skybox) {
     skybox[3].v.cn[0] = sSkyColors[gCurrentCourseId].unk0;
     skybox[3].v.cn[1] = sSkyColors[gCurrentCourseId].unk2;
     skybox[3].v.cn[2] = sSkyColors[gCurrentCourseId].unk4;
-    skybox[4].v.cn[0] = D_802B8BCC[gCurrentCourseId].unk0;
-    skybox[4].v.cn[1] = D_802B8BCC[gCurrentCourseId].unk2;
-    skybox[4].v.cn[2] = D_802B8BCC[gCurrentCourseId].unk4;
-    skybox[5].v.cn[0] = D_802B8BCC[gCurrentCourseId].unk6;
-    skybox[5].v.cn[1] = D_802B8BCC[gCurrentCourseId].unk8;
-    skybox[5].v.cn[2] = D_802B8BCC[gCurrentCourseId].unkA;
-    skybox[6].v.cn[0] = D_802B8BCC[gCurrentCourseId].unk6;
-    skybox[6].v.cn[1] = D_802B8BCC[gCurrentCourseId].unk8;
-    skybox[6].v.cn[2] = D_802B8BCC[gCurrentCourseId].unkA;
-    skybox[7].v.cn[0] = D_802B8BCC[gCurrentCourseId].unk0;
-    skybox[7].v.cn[1] = D_802B8BCC[gCurrentCourseId].unk2;
-    skybox[7].v.cn[2] = D_802B8BCC[gCurrentCourseId].unk4;
+    skybox[4].v.cn[0] = sSkyColors2[gCurrentCourseId].unk0;
+    skybox[4].v.cn[1] = sSkyColors2[gCurrentCourseId].unk2;
+    skybox[4].v.cn[2] = sSkyColors2[gCurrentCourseId].unk4;
+    skybox[5].v.cn[0] = sSkyColors2[gCurrentCourseId].unk6;
+    skybox[5].v.cn[1] = sSkyColors2[gCurrentCourseId].unk8;
+    skybox[5].v.cn[2] = sSkyColors2[gCurrentCourseId].unkA;
+    skybox[6].v.cn[0] = sSkyColors2[gCurrentCourseId].unk6;
+    skybox[6].v.cn[1] = sSkyColors2[gCurrentCourseId].unk8;
+    skybox[6].v.cn[2] = sSkyColors2[gCurrentCourseId].unkA;
+    skybox[7].v.cn[0] = sSkyColors2[gCurrentCourseId].unk0;
+    skybox[7].v.cn[1] = sSkyColors2[gCurrentCourseId].unk2;
+    skybox[7].v.cn[2] = sSkyColors2[gCurrentCourseId].unk4;
 }
 
 void func_802A487C(Vtx *arg0, UNUSED struct UnkStruct_800DC5EC *arg1, UNUSED s32 arg2, UNUSED s32 arg3, UNUSED f32 *arg4) {
@@ -766,7 +753,7 @@ void func_802A5760(void) {
     }
 }
 
-void func_802A59A4(void) {
+void render_player_one_1p_screen(void) {
     Camera *camera = &cameras[0];
     UNUSED s32 pad[4];
     u16 perspNorm;
@@ -810,28 +797,32 @@ void func_802A59A4(void) {
         render_set_position(matrix, 0);
     }
     render_course_actors(D_800DC5EC);
-    func_80058090(0);
+    render_object(RENDER_SCREEN_MODE_1P_PLAYER_ONE);
     render_players_on_screen_one();
-    func_8029122C(D_800DC5EC, 0);
+    func_8029122C(D_800DC5EC, PLAYER_ONE);
     func_80021B0C();
-    func_802A2F34(D_800DC5EC);
-    func_80058538(0);
+    render_item_boxes(D_800DC5EC);
+    render_player_snow_effect(RENDER_SCREEN_MODE_1P_PLAYER_ONE);
     func_80058BF4();
     if (D_800DC5B8 != 0) {
-        func_80058C20(0);
+        func_80058C20(RENDER_SCREEN_MODE_1P_PLAYER_ONE);
     }
-    func_80093A5C(0);
+    func_80093A5C(RENDER_SCREEN_MODE_1P_PLAYER_ONE);
     if (D_800DC5B8 != 0) {
-        func_80058DB4(0);
+        render_hud(RENDER_SCREEN_MODE_1P_PLAYER_ONE);
     }
 }
 
-void func_802A5CB4(void) {
+void render_player_one_2p_screen_vertical(void) {
     Camera *camera = &cameras[0];
     UNUSED s32 pad[2];
     u16 perspNorm;
     Mat4 matrix;
+    #ifdef VERSION_EU
     f32 sp9C;
+    #else
+    UNUSED f32 sp9C;
+    #endif
 
     func_802A50EC();
 #ifdef VERSION_EU
@@ -866,29 +857,33 @@ void func_802A5CB4(void) {
         render_set_position(matrix, 0);
     }
     render_course_actors(D_800DC5EC);
-    func_80058090(1);
+    render_object(RENDER_SCREEN_MODE_2P_HORIZONTAL_PLAYER_ONE);
     render_players_on_screen_one();
-    func_8029122C(D_800DC5EC, 0);
+    func_8029122C(D_800DC5EC, PLAYER_ONE);
     func_80021B0C();
-    func_802A2F34(D_800DC5EC);
-    func_80058538(1);
+    render_item_boxes(D_800DC5EC);
+    render_player_snow_effect(RENDER_SCREEN_MODE_2P_HORIZONTAL_PLAYER_ONE);
     func_80058BF4();
     if (D_800DC5B8 != 0) {
-        func_80058C20(1);
+        func_80058C20(RENDER_SCREEN_MODE_2P_HORIZONTAL_PLAYER_ONE);
     }
-    func_80093A5C(1);
+    func_80093A5C(RENDER_SCREEN_MODE_2P_HORIZONTAL_PLAYER_ONE);
     if (D_800DC5B8 != 0) {
-        func_80058DB4(1);
+        render_hud(RENDER_SCREEN_MODE_2P_HORIZONTAL_PLAYER_ONE);
     }
     D_8015F788 += 1;
 }
 
-void func_802A5FAC(void) {
+void render_player_two_2p_screen_vertical(void) {
     Camera *camera = &cameras[1];
     UNUSED s32 pad[2];
     u16 perspNorm;
     Mat4 matrix;
+    #ifdef VERSION_EU
     f32 sp9C;
+    #else
+    UNUSED f32 sp9C;
+    #endif
 
     func_802A5004();
     init_rdp();
@@ -920,24 +915,24 @@ void func_802A5FAC(void) {
         render_set_position(matrix, 0);
     }
     render_course_actors(D_800DC5F0);
-    func_80058090(2);
+    render_object(RENDER_SCREEN_MODE_2P_HORIZONTAL_PLAYER_TWO);
     render_players_on_screen_two();
-    func_8029122C(D_800DC5F0, 1);
+    func_8029122C(D_800DC5F0, PLAYER_TWO);
     func_80021C78();
-    func_802A2F34(D_800DC5F0);
+    render_item_boxes(D_800DC5F0);
     func_80058BF4();
-    func_80058538(2);
+    render_player_snow_effect(RENDER_SCREEN_MODE_2P_HORIZONTAL_PLAYER_TWO);
     if (D_800DC5B8 != 0) {
-        func_80058C20(2);
+        func_80058C20(RENDER_SCREEN_MODE_2P_HORIZONTAL_PLAYER_TWO);
     }
-    func_80093A5C(2);
+    func_80093A5C(RENDER_SCREEN_MODE_2P_HORIZONTAL_PLAYER_TWO);
     if (D_800DC5B8 != 0) {
-        func_80058DB4(2);
+        render_hud(RENDER_SCREEN_MODE_2P_HORIZONTAL_PLAYER_TWO);
     }
     D_8015F788 += 1;
 }
 
-void func_802A62A4(void) {
+void render_player_one_2p_screen_horizontal(void) {
     Camera *camera = &cameras[0];
     UNUSED s32 pad[2];
     u16 perspNorm;
@@ -978,24 +973,24 @@ void func_802A62A4(void) {
         render_set_position(matrix, 0);
     }
     render_course_actors(D_800DC5EC);
-    func_80058090(3);
+    render_object(RENDER_SCREEN_MODE_2P_VERTICAL_PLAYER_ONE);
     render_players_on_screen_one();
-    func_8029122C(D_800DC5EC, 0);
+    func_8029122C(D_800DC5EC, PLAYER_ONE);
     func_80021B0C();
-    func_802A2F34(D_800DC5EC);
-    func_80058538(3);
+    render_item_boxes(D_800DC5EC);
+    render_player_snow_effect(RENDER_SCREEN_MODE_2P_VERTICAL_PLAYER_ONE);
     func_80058BF4();
     if (D_800DC5B8 != 0) {
-        func_80058C20(3);
+        func_80058C20(RENDER_SCREEN_MODE_2P_VERTICAL_PLAYER_ONE);
     }
-    func_80093A5C(3);
+    func_80093A5C(RENDER_SCREEN_MODE_2P_VERTICAL_PLAYER_ONE);
     if (D_800DC5B8 != 0) {
-        func_80058DB4(3);
+        render_hud(RENDER_SCREEN_MODE_2P_VERTICAL_PLAYER_ONE);
     }
     D_8015F788 += 1;
 }
 
-void func_802A65B8(void) {
+void render_player_two_2p_screen_horizontal(void) {
     Camera *camera = &cameras[1];
     UNUSED s32 pad[2];
     u16 perspNorm;
@@ -1035,24 +1030,24 @@ void func_802A65B8(void) {
         render_set_position(matrix, 0);
     }
     render_course_actors(D_800DC5F0);
-    func_80058090(4);
+    render_object(RENDER_SCREEN_MODE_2P_VERTICAL_PLAYER_TWO);
     render_players_on_screen_two();
-    func_8029122C(D_800DC5F0, 1);
+    func_8029122C(D_800DC5F0, PLAYER_TWO);
     func_80021C78();
-    func_802A2F34(D_800DC5F0);
-    func_80058538(4);
+    render_item_boxes(D_800DC5F0);
+    render_player_snow_effect(RENDER_SCREEN_MODE_2P_VERTICAL_PLAYER_TWO);
     func_80058BF4();
     if (D_800DC5B8 != 0) {
-        func_80058C20(4);
+        func_80058C20(RENDER_SCREEN_MODE_2P_VERTICAL_PLAYER_TWO);
     }
-    func_80093A5C(4);
+    func_80093A5C(RENDER_SCREEN_MODE_2P_VERTICAL_PLAYER_TWO);
     if (D_800DC5B8 != 0) {
-        func_80058DB4(4);
+        render_hud(RENDER_SCREEN_MODE_2P_VERTICAL_PLAYER_TWO);
     }
     D_8015F788 += 1;
 }
 
-void func_802A68CC(void) {
+void render_player_one_3p_4p_screen(void) {
     Camera *camera = camera1;
     UNUSED s32 pad[2];
     u16 perspNorm;
@@ -1089,24 +1084,24 @@ void func_802A68CC(void) {
         render_set_position(matrix, 0);
     }
     render_course_actors(D_800DC5EC);
-    func_80058090(8);
+    render_object(RENDER_SCREEN_MODE_3P_4P_PLAYER_ONE);
     render_players_on_screen_one();
-    func_8029122C(D_800DC5EC, 0);
+    func_8029122C(D_800DC5EC, PLAYER_ONE);
     func_80021B0C();
-    func_802A2F34(D_800DC5EC);
-    func_80058538(8);
+    render_item_boxes(D_800DC5EC);
+    render_player_snow_effect(RENDER_SCREEN_MODE_3P_4P_PLAYER_ONE);
     func_80058BF4();
     if (D_800DC5B8 != 0) {
-        func_80058C20(8);
+        func_80058C20(RENDER_SCREEN_MODE_3P_4P_PLAYER_ONE);
     }
-    func_80093A5C(8);
+    func_80093A5C(RENDER_SCREEN_MODE_3P_4P_PLAYER_ONE);
     if (D_800DC5B8 != 0) {
-        func_80058DB4(8);
+        render_hud(RENDER_SCREEN_MODE_3P_4P_PLAYER_ONE);
     }
     D_8015F788 += 1;
 }
 
-void func_802A6BB0(void) {
+void render_player_two_3p_4p_screen(void) {
     Camera *camera = camera2;
     UNUSED s32 pad[2];
     u16 perspNorm;
@@ -1143,24 +1138,24 @@ void func_802A6BB0(void) {
         render_set_position(matrix, 0);
     }
     render_course_actors(D_800DC5F0);
-    func_80058090(9);
+    render_object(RENDER_SCREEN_MODE_3P_4P_PLAYER_TWO);
     render_players_on_screen_two();
-    func_8029122C(D_800DC5F0, 1);
+    func_8029122C(D_800DC5F0, PLAYER_TWO);
     func_80021C78();
-    func_802A2F34(D_800DC5F0);
-    func_80058538(9);
+    render_item_boxes(D_800DC5F0);
+    render_player_snow_effect(RENDER_SCREEN_MODE_3P_4P_PLAYER_TWO);
     func_80058BF4();
     if (D_800DC5B8 != 0) {
-        func_80058C20(9);
+        func_80058C20(RENDER_SCREEN_MODE_3P_4P_PLAYER_TWO);
     }
-    func_80093A5C(9);
+    func_80093A5C(RENDER_SCREEN_MODE_3P_4P_PLAYER_TWO);
     if (D_800DC5B8 != 0) {
-        func_80058DB4(9);
+        render_hud(RENDER_SCREEN_MODE_3P_4P_PLAYER_TWO);
     }
     D_8015F788 += 1;
 }
 
-void func_802A6E94(void) {
+void render_player_three_3p_4p_screen(void) {
     Camera *camera = camera3;
     UNUSED s32 pad[2];
     u16 perspNorm;
@@ -1198,24 +1193,24 @@ void func_802A6E94(void) {
         render_set_position(matrix, 0);
     }
     render_course_actors(D_800DC5F4);
-    func_80058090(10);
+    render_object(RENDER_SCREEN_MODE_3P_4P_PLAYER_THREE);
     render_players_on_screen_three();
-    func_8029122C(D_800DC5F4, 2);
+    func_8029122C(D_800DC5F4, PLAYER_THREE);
     func_80021D40();
-    func_802A2F34(D_800DC5F4);
-    func_80058538(10);
+    render_item_boxes(D_800DC5F4);
+    render_player_snow_effect(RENDER_SCREEN_MODE_3P_4P_PLAYER_THREE);
     func_80058BF4();
     if (D_800DC5B8 != 0) {
-        func_80058C20(10);
+        func_80058C20(RENDER_SCREEN_MODE_3P_4P_PLAYER_THREE);
     }
-    func_80093A5C(10);
+    func_80093A5C(RENDER_SCREEN_MODE_3P_4P_PLAYER_THREE);
     if (D_800DC5B8 != 0) {
-        func_80058DB4(10);
+        render_hud(RENDER_SCREEN_MODE_3P_4P_PLAYER_THREE);
     }
     D_8015F788 += 1;
 }
 
-void func_802A7178(void) {
+void render_player_four_3p_4p_screen(void) {
     Camera *camera = camera4;
     UNUSED s32 pad[2];
     u16 perspNorm;
@@ -1227,9 +1222,9 @@ void func_802A7178(void) {
 
     func_802A5760();
     if (gPlayerCountSelection1 == 3) {
-        func_80093A5C(11);
+        func_80093A5C(RENDER_SCREEN_MODE_3P_4P_PLAYER_FOUR);
         if (D_800DC5B8 != 0) {
-            func_80058DB4(11);
+            render_hud(RENDER_SCREEN_MODE_3P_4P_PLAYER_FOUR);
         }
         D_8015F788 += 1;
         return;
@@ -1261,19 +1256,19 @@ void func_802A7178(void) {
         render_set_position(matrix, 0);
     }
     render_course_actors(D_800DC5F8);
-    func_80058090(11);
+    render_object(RENDER_SCREEN_MODE_3P_4P_PLAYER_FOUR);
     render_players_on_screen_four();
-    func_8029122C(D_800DC5F8, 3);
+    func_8029122C(D_800DC5F8, PLAYER_FOUR);
     func_80021DA8();
-    func_802A2F34(D_800DC5F8);
-    func_80058538(11);
+    render_item_boxes(D_800DC5F8);
+    render_player_snow_effect(RENDER_SCREEN_MODE_3P_4P_PLAYER_FOUR);
     func_80058BF4();
     if (D_800DC5B8 != 0) {
-        func_80058C20(11);
+        func_80058C20(RENDER_SCREEN_MODE_3P_4P_PLAYER_FOUR);
     }
-    func_80093A5C(0xB);
+    func_80093A5C(RENDER_SCREEN_MODE_3P_4P_PLAYER_FOUR);
     if (D_800DC5B8 != 0) {
-        func_80058DB4(11);
+        render_hud(RENDER_SCREEN_MODE_3P_4P_PLAYER_FOUR);
     }
     D_8015F788 += 1;
 }

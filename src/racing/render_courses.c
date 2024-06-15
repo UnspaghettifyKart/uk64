@@ -1,8 +1,8 @@
 #include <ultra64.h>
 #include <macros.h>
+#include <mk64.h>
 #include <common_structs.h>
 #include <defines.h>
-#include <types.h>
 #include <course.h>
 
 #include "render_courses.h"
@@ -194,7 +194,7 @@ void func_802911C4(void) {
     }
 }
 
-void func_8029122C(struct UnkStruct_800DC5EC *arg0, s32 arg1) {
+void func_8029122C(struct UnkStruct_800DC5EC *arg0, s32 playerId) {
     UNUSED s32 pad;
     Player *player = arg0->player;
     Mat4 matrix;
@@ -207,22 +207,22 @@ void func_8029122C(struct UnkStruct_800DC5EC *arg0, s32 arg1) {
     pathCounter = (u16) arg0->pathCounter;
     cameraRot = (u16) arg0->camera->rot[1];
     playerDirection = arg0->playerDirection;
-    switch (arg1) {
-        case 0:
-            gSPMatrix(gDisplayListHead++, VIRTUAL_TO_PHYSICAL(&gGfxPool->mtxPersp[0]), G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_PROJECTION);
-            gSPMatrix(gDisplayListHead++, VIRTUAL_TO_PHYSICAL(&gGfxPool->mtxLookAt[0]), G_MTX_NOPUSH | G_MTX_MUL | G_MTX_PROJECTION);
+    switch (playerId) {
+        case PLAYER_ONE:
+            gSPMatrix(gDisplayListHead++, VIRTUAL_TO_PHYSICAL(&gGfxPool->mtxPersp[PLAYER_ONE]), G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_PROJECTION);
+            gSPMatrix(gDisplayListHead++, VIRTUAL_TO_PHYSICAL(&gGfxPool->mtxLookAt[PLAYER_ONE]), G_MTX_NOPUSH | G_MTX_MUL | G_MTX_PROJECTION);
             break;
-        case 1:
-            gSPMatrix(gDisplayListHead++, VIRTUAL_TO_PHYSICAL(&gGfxPool->mtxPersp[1]), G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_PROJECTION);
-            gSPMatrix(gDisplayListHead++, VIRTUAL_TO_PHYSICAL(&gGfxPool->mtxLookAt[1]), G_MTX_NOPUSH | G_MTX_MUL | G_MTX_PROJECTION);
+        case PLAYER_TWO:
+            gSPMatrix(gDisplayListHead++, VIRTUAL_TO_PHYSICAL(&gGfxPool->mtxPersp[PLAYER_TWO]), G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_PROJECTION);
+            gSPMatrix(gDisplayListHead++, VIRTUAL_TO_PHYSICAL(&gGfxPool->mtxLookAt[PLAYER_TWO]), G_MTX_NOPUSH | G_MTX_MUL | G_MTX_PROJECTION);
             break;
-        case 2:
-            gSPMatrix(gDisplayListHead++, VIRTUAL_TO_PHYSICAL(&gGfxPool->mtxPersp[2]), G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_PROJECTION);
-            gSPMatrix(gDisplayListHead++, VIRTUAL_TO_PHYSICAL(&gGfxPool->mtxLookAt[2]), G_MTX_NOPUSH | G_MTX_MUL | G_MTX_PROJECTION);
+        case PLAYER_THREE:
+            gSPMatrix(gDisplayListHead++, VIRTUAL_TO_PHYSICAL(&gGfxPool->mtxPersp[PLAYER_THREE]), G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_PROJECTION);
+            gSPMatrix(gDisplayListHead++, VIRTUAL_TO_PHYSICAL(&gGfxPool->mtxLookAt[PLAYER_THREE]), G_MTX_NOPUSH | G_MTX_MUL | G_MTX_PROJECTION);
             break;
-        case 3:
-            gSPMatrix(gDisplayListHead++, VIRTUAL_TO_PHYSICAL(&gGfxPool->mtxPersp[3]), G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_PROJECTION);
-            gSPMatrix(gDisplayListHead++, VIRTUAL_TO_PHYSICAL(&gGfxPool->mtxLookAt[3]), G_MTX_NOPUSH | G_MTX_MUL | G_MTX_PROJECTION);
+        case PLAYER_FOUR:
+            gSPMatrix(gDisplayListHead++, VIRTUAL_TO_PHYSICAL(&gGfxPool->mtxPersp[PLAYER_FOUR]), G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_PROJECTION);
+            gSPMatrix(gDisplayListHead++, VIRTUAL_TO_PHYSICAL(&gGfxPool->mtxLookAt[PLAYER_FOUR]), G_MTX_NOPUSH | G_MTX_MUL | G_MTX_PROJECTION);
             break;
     }
     mtxf_identity(matrix);
@@ -1271,11 +1271,11 @@ void func_80295BF8(s32 playerIndex) {
 
 void func_80295C6C(void) {
     gNextFreeMemoryAddress += ALIGN16(D_8015F588 * sizeof(mk64_surface_map_ram));
-    D_8015F6E8 += 20;
-    D_8015F6F0 += 20;
-    D_8015F6EA += -20;
-    D_8015F6F2 += -20;
-    D_8015F6EE += -20;
+    gCourseMaxX += 20;
+    gCourseMaxZ += 20;
+    gCourseMinX += -20;
+    gCourseMinZ += -20;
+    gCourseMinY += -20;
     func_802AF314();
     gNextFreeMemoryAddress += ALIGN16(D_8015F58A * 2);
 }
@@ -1292,12 +1292,15 @@ void func_80295D6C(void) {
 
 void func_80295D88(void) {
     gNumActors = 0;
-    D_8015F6EA = 0;
-    D_8015F6EE = 0;
-    D_8015F6F2 = 0;
-    D_8015F6E8 = 0;
-    D_8015F6EC = 0;
-    D_8015F6F0 = 0;
+
+    gCourseMinX = 0;
+    gCourseMinY = 0;
+    gCourseMinZ = 0;
+
+    gCourseMaxX = 0;
+    gCourseMaxY = 0;
+    gCourseMaxZ = 0;
+    
     D_8015F59C = 0;
     D_8015F5A0 = 0;
     func_80295D6C();
@@ -1308,15 +1311,18 @@ void func_80295D88(void) {
     D_800DC5C8 = 0;
     switch (gCurrentCourseId) {
         case COURSE_MARIO_RACEWAY:
+            // d_course_mario_raceway_packed_dl_1140
             set_vertex_data_with_defaults(d_course_mario_raceway_packed_dl_1140);
             if (gScreenModeSelection == SCREEN_MODE_1P) {
+                // d_course_mario_raceway_packed_dl_8E8
                 set_vertex_data_with_defaults(d_course_mario_raceway_packed_dl_8E8);
             } else {
+                // d_course_mario_raceway_packed_dl_2D68
                 set_vertex_data_with_defaults(d_course_mario_raceway_packed_dl_2D68);
             }
             parse_course_displaylists((uintptr_t) d_course_mario_raceway_addr);
             func_80295C6C();
-            D_8015F8E4 = D_8015F6EE - 10.0f;
+            D_8015F8E4 = gCourseMinY - 10.0f;
             break;
         case COURSE_CHOCO_MOUNTAIN:
             D_800DC5BC = 1;
@@ -1359,10 +1365,10 @@ void func_80295D88(void) {
             D_8015F8E4 = -80.0f;
             break;
         case COURSE_YOSHI_VALLEY:
-            func_802B5D64(&d_course_yoshi_valley_lights4, -0x38F0, 0x1C70, 1);
+            func_802B5D64((uintptr_t) &d_course_yoshi_valley_lights4, -0x38F0, 0x1C70, 1);
             parse_course_displaylists((uintptr_t) d_course_yoshi_valley_addr);
             func_80295C6C();
-            D_8015F8E4 = D_8015F6EE - 10.0f;
+            D_8015F8E4 = gCourseMinY - 10.0f;
             break;
         case COURSE_FRAPPE_SNOWLAND:
             parse_course_displaylists((uintptr_t) d_course_frappe_snowland_addr);
@@ -1385,12 +1391,12 @@ void func_80295D88(void) {
         case COURSE_LUIGI_RACEWAY:
             parse_course_displaylists((uintptr_t) d_course_luigi_raceway_addr);
             func_80295C6C();
-            D_8015F8E4 = D_8015F6EE - 10.0f;
+            D_8015F8E4 = gCourseMinY - 10.0f;
             break;
         case COURSE_MOO_MOO_FARM:
             parse_course_displaylists((uintptr_t) d_course_moo_moo_farm_addr);
             func_80295C6C();
-            D_8015F8E4 = D_8015F6EE - 10.0f;
+            D_8015F8E4 = gCourseMinY - 10.0f;
             break;
         case COURSE_TOADS_TURNPIKE:
             D_801625EC = 43;
@@ -1400,12 +1406,12 @@ void func_80295D88(void) {
             D_802B87B4 = 1000;
             parse_course_displaylists((uintptr_t) d_course_toads_turnpike_addr);
             func_80295C6C();
-            D_8015F8E4 = D_8015F6EE - 10.0f;
+            D_8015F8E4 = gCourseMinY - 10.0f;
             break;
         case COURSE_KALAMARI_DESERT:
             parse_course_displaylists((uintptr_t) d_course_kalimari_desert_addr);
             func_80295C6C();
-            D_8015F8E4 = D_8015F6EE - 10.0f;
+            D_8015F8E4 = gCourseMinY - 10.0f;
             break;
         case COURSE_SHERBET_LAND:
             parse_course_displaylists((uintptr_t) d_course_sherbet_land_addr);
@@ -1429,32 +1435,44 @@ void func_80295D88(void) {
         case COURSE_WARIO_STADIUM:
             parse_course_displaylists((uintptr_t) d_course_wario_stadium_addr);
             func_80295C6C();
-            D_8015F8E4 = D_8015F6EE - 10.0f;
-            find_vtx_and_set_colours((uintptr_t)d_course_wario_stadium_packed_dl_C50, 100, 255, 255, 255);
-            find_vtx_and_set_colours((uintptr_t)d_course_wario_stadium_packed_dl_BD8, 100, 255, 255, 255);
-            find_vtx_and_set_colours((uintptr_t)d_course_wario_stadium_packed_dl_B60, 100, 255, 255, 255);
-            find_vtx_and_set_colours((uintptr_t)d_course_wario_stadium_packed_dl_AE8, 100, 255, 255, 255);
-            find_vtx_and_set_colours((uintptr_t)d_course_wario_stadium_packed_dl_CC8, 100, 255, 255, 255);
-            find_vtx_and_set_colours((uintptr_t)d_course_wario_stadium_packed_dl_D50, 100, 255, 255, 255);
-            find_vtx_and_set_colours((uintptr_t)d_course_wario_stadium_packed_dl_DD0, 100, 255, 255, 255);
-            find_vtx_and_set_colours((uintptr_t)d_course_wario_stadium_packed_dl_E48, 100, 255, 255, 255);
+            D_8015F8E4 = gCourseMinY - 10.0f;
+            // d_course_wario_stadium_packed_dl_C50
+            find_vtx_and_set_colours(d_course_wario_stadium_packed_dl_C50, 100, 255, 255, 255);
+            // d_course_wario_stadium_packed_dl_BD8
+            find_vtx_and_set_colours(d_course_wario_stadium_packed_dl_BD8, 100, 255, 255, 255);
+            // d_course_wario_stadium_packed_dl_B60
+            find_vtx_and_set_colours(d_course_wario_stadium_packed_dl_B60, 100, 255, 255, 255);
+            // d_course_wario_stadium_packed_dl_AE8
+            find_vtx_and_set_colours(d_course_wario_stadium_packed_dl_AE8, 100, 255, 255, 255);
+            // d_course_wario_stadium_packed_dl_CC8
+            find_vtx_and_set_colours(d_course_wario_stadium_packed_dl_CC8, 100, 255, 255, 255);
+            // d_course_wario_stadium_packed_dl_D50
+            find_vtx_and_set_colours(d_course_wario_stadium_packed_dl_D50, 100, 255, 255, 255);
+            // d_course_wario_stadium_packed_dl_DD0
+            find_vtx_and_set_colours(d_course_wario_stadium_packed_dl_DD0, 100, 255, 255, 255);
+            // d_course_wario_stadium_packed_dl_E48
+            find_vtx_and_set_colours(d_course_wario_stadium_packed_dl_E48, 100, 255, 255, 255);
             break;
         case COURSE_BLOCK_FORT:
+            // d_course_block_fort_packed_dl_15C0
             set_vertex_data_with_default_section_id(d_course_block_fort_packed_dl_15C0, 1);
             func_80295C6C();
-            D_8015F8E4 = D_8015F6EE - 10.0f;
+            D_8015F8E4 = gCourseMinY - 10.0f;
             break;
         case COURSE_SKYSCRAPER:
+            // d_course_skyscraper_packed_dl_1110
             set_vertex_data_with_default_section_id(d_course_skyscraper_packed_dl_1110, 1);
+            // d_course_skyscraper_packed_dl_258
             set_vertex_data_with_default_section_id(d_course_skyscraper_packed_dl_258, 1);
             func_80295C6C();
 
             D_8015F8E4 = -480.0f;
             break;
         case COURSE_DOUBLE_DECK:
+            // d_course_double_deck_packed_dl_738
             set_vertex_data_with_default_section_id(d_course_double_deck_packed_dl_738, 1);
             func_80295C6C();
-            D_8015F8E4 = D_8015F6EE - 10.0f;
+            D_8015F8E4 = gCourseMinY - 10.0f;
             break;
         case COURSE_DK_JUNGLE:
             parse_course_displaylists((uintptr_t) d_course_dks_jungle_parkway_addr);
@@ -1463,10 +1481,15 @@ void func_80295D88(void) {
             find_vtx_and_set_colours((uintptr_t)d_course_dks_jungle_parkway_packed_dl_3FA8, 120, 255, 255, 255);
             break;
         case COURSE_BIG_DONUT:
+            // d_course_big_donut_packed_dl_1018
             set_vertex_data_with_default_section_id(d_course_big_donut_packed_dl_1018, 6);
+            // d_course_big_donut_packed_dl_450
             set_vertex_data_with_default_section_id(d_course_big_donut_packed_dl_450, 6);
+            // d_course_big_donut_packed_dl_AC0
             set_vertex_data_with_default_section_id(d_course_big_donut_packed_dl_AC0, 6);
+            // d_course_big_donut_packed_dl_B58
             set_vertex_data_with_default_section_id(d_course_big_donut_packed_dl_B58, 6);
+            // d_course_big_donut_packed_dl_230
             set_vertex_data_with_default_section_id(d_course_big_donut_packed_dl_230, 6);
             func_80295C6C();
             D_8015F8E4 = 100.0f;
@@ -1535,8 +1558,9 @@ void func_802966A0(void) {
             if (D_802B87C4 < 0) {
                 D_802B87C4 = 0xFF;
             }
+            // d_course_dks_jungle_parkway_packed_dl_9880
             find_and_set_tile_size((uintptr_t)d_course_dks_jungle_parkway_packed_dl_9880, 0, D_802B87C4);
-            func_80298C94();
+            evaluate_collision_players_palm_trees();
             break;
     }
 }

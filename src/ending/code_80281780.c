@@ -1,11 +1,10 @@
 #include <ultra64.h>
 #include <macros.h>
 #include <defines.h>
-#include <config.h>
 #include <segments.h>
+#include <mk64.h>
 
 #include "code_80281780.h"
-#include "types.h"
 #include "memory.h"
 #include "camera.h"
 #include "camera_junk.h"
@@ -121,13 +120,13 @@ void load_ceremony_cutscene(void) {
     set_segment_base_addr(6, (void *) decompress_segments((u8 *) &_course_banshee_boardwalk_dl_mio0SegmentRomStart, (u8 *) &_course_yoshi_valley_dl_mio0SegmentRomStart));
     D_8015F8E4 = -2000.0f;
 
-    D_8015F6EA = -0x15A1;
-    D_8015F6EE = -0x15A1;
-    D_8015F6F2 = -0x15A1;
+    gCourseMinX = -0x15A1;
+    gCourseMinY = -0x15A1;
+    gCourseMinZ = -0x15A1;
 
-    D_8015F6E8 = 0x15A1;
-    D_8015F6EC = 0x15A1;
-    D_8015F6F0 = 0x15A1;
+    gCourseMaxX = 0x15A1;
+    gCourseMaxY = 0x15A1;
+    gCourseMaxZ = 0x15A1;
 
     D_8015F59C = 0;
     D_8015F5A0 = 0;
@@ -137,21 +136,31 @@ void load_ceremony_cutscene(void) {
     D_800DC5C8 = (u16)0;
     gSurfaceMap = (mk64_surface_map_ram *) gNextFreeMemoryAddress;
     //! @bug these segmented addresses need to be symbols for mobility
+    // d_course_royal_raceway_packed_dl_67E8
     set_vertex_data_with_default_section_id(d_course_royal_raceway_packed_dl_67E8, -1);
+    // d_course_royal_raceway_packed_dl_AEF8
     set_vertex_data_with_default_section_id(d_course_royal_raceway_packed_dl_AEF8, -1);
+    // d_course_royal_raceway_packed_dl_A970
     set_vertex_data_with_default_section_id(d_course_royal_raceway_packed_dl_A970, 8);
+    // d_course_royal_raceway_packed_dl_AC30
     set_vertex_data_with_default_section_id(d_course_royal_raceway_packed_dl_AC30, 8);
+    // d_course_royal_raceway_packed_dl_CE0
     set_vertex_data_with_default_section_id(d_course_royal_raceway_packed_dl_CE0, 0x10);
+    // d_course_royal_raceway_packed_dl_E88
     set_vertex_data_with_default_section_id(d_course_royal_raceway_packed_dl_E88, 0x10);
+    // d_course_royal_raceway_packed_dl_A618
     set_vertex_data_with_default_section_id(d_course_royal_raceway_packed_dl_A618, -1);
+    // d_course_royal_raceway_packed_dl_A618
     set_vertex_data_with_default_section_id(d_course_royal_raceway_packed_dl_A618, -1);
+    // d_course_royal_raceway_packed_dl_23F8
     set_vertex_data_with_default_section_id(d_course_royal_raceway_packed_dl_23F8, 1);
+    // d_course_royal_raceway_packed_dl_2478
     set_vertex_data_with_default_section_id(d_course_royal_raceway_packed_dl_2478, 1);
     func_80295C6C();
     debug_switch_character_ceremony_cutscene();
     func_802818BC();
     func_8003D080();
-    init_object_list();
+    init_hud();
     func_8001C05C();
     balloons_and_fireworks_init();
     func_802816B8();

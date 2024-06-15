@@ -125,61 +125,30 @@ void func_800AFC54(Vtx *arg0, s32 arg1, s32 arg2, s32 arg3, s16 arg4[3]) {
 GLOBAL_ASM("asm/non_matchings/code_800AF9B0/func_800AFC54.s")
 #endif
 
-void func_800AFE00(Vtx *arg0, s16 (*arg1)[3], s32 arg2, s32 arg3);
-#ifdef MIPS_TO_C
-// guessing on the Vtx kind again
-void func_800AFE00(Vtx *arg0, s16 (*arg1)[3], s32 arg2, s32 arg3) {
-    s32 idx1; // v0
-    s32 idx2; // v0
-    s16 sp14[6];
-    Vtx *sec, *third, *fourth;
+void func_800AFE00(Vtx *arg0, Vec3s *arg1, s32 arg2, s32 arg3) {
+    s32 idx1;
+    s32 idx2;
     s32 i;
+    Vtx *vtx;
+    s16 sp14[2][3];
 
-    if (arg2 == 0) {
-        idx1 = 0;
-    } else {
-        idx1 = arg2 - 1;
-    }
-
-    if (arg2 == arg3) {
-        idx2 = arg3;
-    } else {
-        idx2 = arg2 + 1;
-    }
+    idx1 = (arg2 == 0) ? 0 : arg2 - 1;
+    idx2 = (arg2 == arg3) ? arg3 : arg2 + 1;
 
     for (i = 0; i < 3; i++) {
-        sp14[i + 0] = (arg1[arg2][i] + arg1[idx1][i]) / 2;
-        sp14[i + 3] = (arg1[arg2][i] + arg1[idx2][i]) / 2;
-        // L800AFEB4
+        sp14[0][i] = (arg1[idx1][i] + arg1[arg2][i]) / 2;
+        sp14[1][i] = (arg1[idx2][i] + arg1[arg2][i]) / 2;
     }
 
-
-    i = 0;
-    sec = arg0 + 1;
-    third = arg0 + 2;
-    fourth = arg0 + 3;
-    
-    while (i != 480) {
-        (arg0 + i)->v.cn[0] = sp14[0];
-        (arg0 + i)->v.cn[1] = sp14[1];
-        (arg0 + i)->v.cn[2] = sp14[2];
-        (sec + i)->v.cn[0] = sp14[3];
-        (sec + i)->v.cn[1] = sp14[4];
-        (sec + i)->v.cn[2] = sp14[5];
-        (third + i)->v.cn[0] = sp14[0];
-        (third + i)->v.cn[1] = sp14[1];
-        (third + i)->v.cn[2] = sp14[2];
-        (fourth + i)->v.cn[0] = sp14[3];
-        (fourth + i)->v.cn[1] = sp14[4];
-        (fourth + i)->v.cn[2] = sp14[5];
-
-        i += 3 * sizeof(Vtx);
-        i++;i--;
+    for (idx2 = 0; idx2 < 0x1E0; idx2 += 0x30) {
+        for (i = 0; i < 4; i++) {
+            vtx = &arg0[i];
+            vtx[idx2 / 1].v.cn[0] = sp14[i % 2][0];
+            vtx[idx2 / 1].v.cn[1] = sp14[i % 2][1];
+            vtx[idx2 / 1].v.cn[2] = sp14[i % 2][2];
+        }
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/code_800AF9B0/func_800AFE00.s")
-#endif
 
 void func_800AFF58(Vtx *arg0) {
     UNUSED u32 pad88[26];
@@ -196,11 +165,12 @@ void func_800AFF58(Vtx *arg0) {
 }
 
 #ifdef NON_MATCHING
+// Credit to SpazzyLemon for the updated and better attempt
 void func_800B0004(void) {
+    Vtx* vtxs;
+    s32 res1, res2;
+    UNUSED u32 pad[0x5];
     s32 i, j;
-    Vtx *spBC;
-    UNUSED u32 pad[0x10];
-    u32 sp64; // offset?
 
     gSPLight(gDisplayListHead++, VIRTUAL_TO_PHYSICAL2(&D_800E8688), LIGHT_1);
     gSPLight(gDisplayListHead++, VIRTUAL_TO_PHYSICAL2(&D_800E8680), LIGHT_2);
@@ -210,34 +180,18 @@ void func_800B0004(void) {
     gSPClearGeometryMode(gDisplayListHead++, G_CULL_BACK);
     gSPSetGeometryMode(gDisplayListHead++, G_LIGHTING);
 
-    spBC = D_8018EDB4 % 2 ? (void *)D_8018EDB8 : (void *)D_8018EDBC;
-
+    vtxs = D_8018EDB4 % 2 ? D_8018EDB8 : D_8018EDBC;
     D_8018EDB2 = 0x9C0;
-    
-    for (i = 0, sp64 = 0; i < 10; i++, sp64 += 0x30) {
-        // L800B018C
+    for (i = 0; i < 10; i++) {
         for (j = 0; j < 12; j++) {
-            f32 res1, res2;
-            // L800B01A0
-            res1 = sins((u16)(D_8018EDB0 - (j * D_8018EDB2))) * 84.0f * (f32)j * 0.18f;
-            res2 = sins((u16)(D_8018EDB0 - ((j+1) * D_8018EDB2))) * 84.0f * (f32)(j+1) * 0.18f;
-            func_800AF9E4(
-                spBC + j + sp64,
-                j,
-                i,
-                84,
-                res1,
-                res2,
-                j * 84,
-                84
-            );
+            res1 = sins(D_8018EDB0 - (j * D_8018EDB2)) * 84.0f * j * 0.18f;
+            res2 = sins(D_8018EDB0 - ((j + 1) * D_8018EDB2)) * 84.0f * (j + 1) * 0.18f;
+            func_800AF9E4(&(&vtxs[j * 4])[i * 48], j, i, 84, res1, res2, (j * 84), 84);
         }
     }
-    // will probably have to retype this function
-    func_800AFF58((void *)spBC);
+    func_800AFF58(vtxs);
     D_8018EDB0 += D_8018EDB2;
-    D_8018EDB4 += 1;
-
+    ++D_8018EDB4;
     gSPSetGeometryMode(gDisplayListHead++, G_CULL_BACK);
     gSPNumLights(gDisplayListHead++, NUMLIGHTS_1);
     gSPClearGeometryMode(gDisplayListHead++, G_LIGHTING);

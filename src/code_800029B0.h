@@ -3,8 +3,29 @@
 
 #include <macros.h>
 #include <ultra64.h>
-#include <types.h>
 #include <actor_types.h>
+#include "camera.h"
+
+struct UnkStruct_800DC5EC {
+    /* 0x00 */ struct Controller *controllers; // gControllers ptr 800F6910
+    /* 0x04 */ Camera *camera; // Player camera ptr
+    /* 0x08 */ Player *player; // Player ptr 800F6990
+    /* 0x0C */ s32 *unkC; // unk struct?
+    /* 0x10 */ Vp viewport;
+    /* 0x20 */ s32 pad[2];
+    /* 0x28 */ s16 cameraHeight;
+    /* 0x2A */ s16 unk;
+    /* 0x2C */ s16 screenWidth;
+    /* 0x2E */ s16 screenHeight;
+    /* 0x30 */ s16 screenStartX;
+    /* 0x32 */ s16 screenStartY;
+    /* 0x34 */ s16 unk3C;
+    /* 0x36 */ s16 playerDirection;
+    /* 0x38 */ s16 pathCounter;
+    /* 0x3A */ s16 unk42;
+    /* 0x3C */ s32 pad2;
+}; // size = 0x40
+
 
 /* Function Prototypes */
 
@@ -58,13 +79,14 @@ extern s32 D_8015F5A0;
 extern s32 D_8015F5A4;
 
 extern Vtx *vtxBuffer[];
-extern s16 D_8015F6E8;
-extern s16 D_8015F6EA;
-extern s16 D_8015F6EC;
-extern s16 D_8015F6EE;
+extern s16 gCourseMaxX;
+extern s16 gCourseMinX;
 
-extern s16 D_8015F6F0;
-extern s16 D_8015F6F2;
+extern s16 gCourseMaxY;
+extern s16 gCourseMinY;
+
+extern s16 gCourseMaxZ;
+extern s16 gCourseMinZ;
 extern s16 D_8015F6F4;
 extern s16 D_8015F6F6;
 extern u16 D_8015F6F8;

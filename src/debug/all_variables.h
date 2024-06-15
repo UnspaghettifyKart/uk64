@@ -18,7 +18,7 @@
 #include <code_8003DC40.h>
 #include <code_80057C60.h>
 #include <code_8006E9C0.h>
-#include <code_80071F00.h>
+#include <update_objects.h>
 #include <code_80086E70.h>
 #include <effects.h>
 #include <code_80091440.h>
@@ -30,11 +30,11 @@
 #include <code_80281780.h>
 #include <code_80281C40.h>
 #include <collision.h>
-#include <common_textures.h>
+#include <assets/common_data.h>
 #include <credits.h>
 #include <data_segment2.h>
 #include <buffers.h>
-#include <hud_renderer.h>
+#include <render_objects.h>
 #include <kart_dma.h>
 #include <main.h>
 #include <math_util_2.h>
@@ -51,7 +51,6 @@
 
 #include <actor_types.h>
 #include <common_structs.h>
-#include <config.h>
 #include <course.h>
 #include <course_offsets.h>
 #include <defines.h>
@@ -62,8 +61,7 @@
 #include <objects.h>
 #include <segments.h>
 #include <sounds.h>
-#include "data/trig_tables.h"
-#include <types.h>
+#include "buffers/trig_tables.h"
 #include <ultra64.h>
 #include <vehicles.h>
 #include <waypoints.h>

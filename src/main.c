@@ -1,11 +1,13 @@
-#define STRANGE_MAIN_HEADER_H
+#ifndef GCC
+#define D_800DC510_AS_U16
+#endif
 #include <ultra64.h>
 #include <PR/os.h>
 #include <PR/ucode.h>
 #include <macros.h>
 #include <decode.h>
-#include <types.h>
-#include <config.h>
+#include <mk64.h>
+
 #include "profiler.h"
 #include "main.h"
 #include "racing/memory.h"
@@ -18,7 +20,7 @@
 #include "profiler.h"
 #include "race_logic.h"
 #include "skybox_and_splitscreen.h"
-#include "hud_renderer.h"
+#include "render_objects.h"
 #include "effects.h"
 #include "code_80281780.h"
 #include "audio/external.h"
@@ -34,7 +36,7 @@
 #include "actors.h"
 #include "staff_ghosts.h"
 #include "crash_screen.h"
-#include "data/gfx_output_buffer.h"
+#include "buffers/gfx_output_buffer.h"
 
 // Declarations (not in this file)
 void func_80091B78(void);
@@ -52,9 +54,9 @@ struct VblankHandler *gVblankHandler2 = NULL;
 
 struct SPTask *gActiveSPTask = NULL;
 struct SPTask *sCurrentAudioSPTask = NULL;
-struct SPTask* sCurrentDisplaySPTask = NULL;
-struct SPTask* sNextAudioSPTask = NULL;
-struct SPTask* sNextDisplaySPTask = NULL;
+struct SPTask *sCurrentDisplaySPTask = NULL;
+struct SPTask *sNextAudioSPTask = NULL;
+struct SPTask *sNextDisplaySPTask = NULL;
 
 
 struct Controller gControllers[NUM_PLAYERS];
@@ -82,11 +84,11 @@ Player *gPlayerTwoCopy = &gPlayers[1];
 UNUSED Player *gPlayerThreeCopy = &gPlayers[2];
 UNUSED Player *gPlayerFourCopy = &gPlayers[3];
 
-s32 D_800FD850[3];
+UNUSED s32 D_800FD850[3];
 struct GfxPool gGfxPools[2];
 struct GfxPool *gGfxPool;
 
-s32 gfxPool_padding; // is this necessary?
+UNUSED s32 gfxPool_padding; // is this necessary?
 struct VblankHandler gGameVblankHandler;
 struct VblankHandler sSoundVblankHandler;
 OSMesgQueue gDmaMesgQueue, gGameVblankQueue, gGfxVblankQueue, unused_gMsgQueue, gIntrMesgQueue, gSPTaskMesgQueue;
@@ -102,15 +104,14 @@ OSMesgQueue gSIEventMesgQueue;
 OSMesg gSIEventMesgBuf[3];
 
 OSContStatus gControllerStatuses[4];
-
 OSContPad gControllerPads[4];
 u8 gControllerBits;
-
 struct UnkStruct_8015F584 D_8014F110[1024];
 u16 gNumActors;
 u16 gMatrixObjectCount;
 s32 gTickSpeed;
 f32 D_80150118;
+
 u16 wasSoftReset;
 u16 D_8015011E;
 
@@ -119,9 +120,6 @@ s32 gGotoMode;
 UNUSED s32 D_80150128;
 UNUSED s32 D_8015012C;
 f32 gCameraZoom[4]; // look like to be the fov of each character
-//f32 D_80150134;
-//f32 D_80150138;
-//f32 D_8015013C;
 UNUSED s32 D_80150140;
 UNUSED s32 D_80150144;
 f32 gScreenAspect;
@@ -132,11 +130,12 @@ UNUSED f32 D_80150154;
 struct D_80150158 gD_80150158[16];
 uintptr_t gSegmentTable[16];
 Gfx *gDisplayListHead;
+
 struct SPTask *gGfxSPTask;
 s32 D_801502A0;
 s32 D_801502A4;
 u16 *gPhysicalFramebuffers[3];
-u32 D_801502B4;
+uintptr_t gPhysicalZBuffer;
 UNUSED u32 D_801502B8;
 UNUSED u32 D_801502BC;
 Mat4 D_801502C0;
@@ -160,8 +159,8 @@ ALIGNED8 u8 gAudioThreadStack[STACKSIZE];
 UNUSED OSThread D_8015CD30;
 UNUSED ALIGNED8 u8 D_8015CD30_Stack[STACKSIZE / 2];
 
-u8 gGfxSPTaskYieldBuffer[4352];
-u32 gGfxSPTaskStack[256];
+ALIGNED8 u8 gGfxSPTaskYieldBuffer[4352];
+ALIGNED8 u32 gGfxSPTaskStack[256];
 OSMesg gPIMesgBuf[32];
 OSMesgQueue gPIMesgQueue;
 
@@ -367,7 +366,7 @@ void read_controllers(void) {
 }
 
 void func_80000BEC(void) {
-    D_801502B4 = VIRTUAL_TO_PHYSICAL(&gZBuffer);
+    gPhysicalZBuffer = VIRTUAL_TO_PHYSICAL(&gZBuffer);
 }
 
 void dispatch_audio_sptask(struct SPTask *spTask) {
@@ -545,7 +544,7 @@ void setup_game_memory(void) {
     textureSegStart = (ptrdiff_t) SEG_RACING - commonCourseDataSize;
 #else
     textureSegStart = SEG_RACING - commonCourseDataSize;
-#endif  
+#endif
     osPiStartDma(&gDmaIoMesg, 0, 0, COMMON_TEXTURES_ROM_START, (void *) textureSegStart, commonCourseDataSize, &gDmaMesgQueue);
     osRecvMesg(&gDmaMesgQueue, &gMainReceivedMesg, OS_MESG_BLOCK);
 
@@ -607,7 +606,7 @@ void race_logic_loop(void) {
                         gCourseTimer += COURSE_TIMER_ITER;
                     }
                     func_802909F0();
-                    evaluate_player_collision();
+                    evaluate_collision_for_players_and_actors();
                     func_800382DC();
                     func_8001EE98(gPlayerOneCopy, camera1, 0);
                     func_80028F70();
@@ -624,7 +623,7 @@ void race_logic_loop(void) {
             sNumVBlanks = 0;
             profiler_log_thread5_time(LEVEL_SCRIPT_EXECUTE);
             D_8015F788 = 0;
-            func_802A59A4();
+            render_player_one_1p_screen();
             if (!gEnableDebugMode) {
                 D_800DC514 = FALSE;
             } else {
@@ -672,7 +671,7 @@ void race_logic_loop(void) {
                             gCourseTimer += COURSE_TIMER_ITER;
                         }
                         func_802909F0();
-                        evaluate_player_collision();
+                        evaluate_collision_for_players_and_actors();
                         func_800382DC();
                         func_8001EE98(gPlayerOneCopy, camera1, 0);
                         func_80029060();
@@ -696,11 +695,11 @@ void race_logic_loop(void) {
                 }
                 D_8015F788 = 0;
                 if (gPlayerWinningIndex == 0) {
-                    func_802A5FAC();
-                    func_802A5CB4();
+                    render_player_two_2p_screen_vertical();
+                    render_player_one_2p_screen_vertical();
                 } else {
-                    func_802A5CB4();
-                    func_802A5FAC();
+                    render_player_one_2p_screen_vertical();
+                    render_player_two_2p_screen_vertical();
                 }
             break;
 
@@ -718,7 +717,7 @@ void race_logic_loop(void) {
                             gCourseTimer += COURSE_TIMER_ITER;
                         }
                         func_802909F0();
-                        evaluate_player_collision();
+                        evaluate_collision_for_players_and_actors();
                         func_800382DC();
                         func_8001EE98(gPlayerOneCopy, camera1, 0);
                         func_80029060();
@@ -742,11 +741,11 @@ void race_logic_loop(void) {
             }
             D_8015F788 = 0;
             if (gPlayerWinningIndex == 0) {
-                func_802A65B8();
-                func_802A62A4();
+                render_player_two_2p_screen_horizontal();
+                render_player_one_2p_screen_horizontal();
             } else {
-                func_802A62A4();
-                func_802A65B8();
+                render_player_one_2p_screen_horizontal();
+                render_player_two_2p_screen_horizontal();
             }
 
             break;
@@ -786,7 +785,7 @@ void race_logic_loop(void) {
                         gCourseTimer += COURSE_TIMER_ITER;
                     }
                     func_802909F0();
-                    evaluate_player_collision();
+                    evaluate_collision_for_players_and_actors();
                     func_800382DC();
                     func_8001EE98(gPlayerOneCopy, camera1, 0);
                     func_80029158();
@@ -814,25 +813,25 @@ void race_logic_loop(void) {
         }
         D_8015F788 = 0;
         if (gPlayerWinningIndex == 0) {
-            func_802A6BB0();
-            func_802A6E94();
-            func_802A7178();
-            func_802A68CC();
+            render_player_two_3p_4p_screen();
+            render_player_three_3p_4p_screen();
+            render_player_four_3p_4p_screen();
+            render_player_one_3p_4p_screen();
         } else if (gPlayerWinningIndex == 1) {
-            func_802A68CC();
-            func_802A6E94();
-            func_802A7178();
-            func_802A6BB0();
+            render_player_one_3p_4p_screen();
+            render_player_three_3p_4p_screen();
+            render_player_four_3p_4p_screen();
+            render_player_two_3p_4p_screen();
         } else if (gPlayerWinningIndex == 2) {
-            func_802A68CC();
-            func_802A6BB0();
-            func_802A7178();
-            func_802A6E94();
+            render_player_one_3p_4p_screen();
+            render_player_two_3p_4p_screen();
+            render_player_four_3p_4p_screen();
+            render_player_three_3p_4p_screen();
         } else {
-            func_802A68CC();
-            func_802A6BB0();
-            func_802A6E94();
-            func_802A7178();
+            render_player_one_3p_4p_screen();
+            render_player_two_3p_4p_screen();
+            render_player_three_3p_4p_screen();
+            render_player_four_3p_4p_screen();
         }
         break;
     }
@@ -876,6 +875,20 @@ void race_logic_loop(void) {
  */
 
 void game_state_handler(void) {
+#if DVDL
+	if ((gControllerOne->button & L_TRIG) &&
+		(gControllerOne->button & R_TRIG) &&
+		(gControllerOne->button & Z_TRIG) &&
+		(gControllerOne->button & A_BUTTON)) {
+			gGamestateNext = CREDITS_SEQUENCE;
+	} else if ((gControllerOne->button & L_TRIG) &&	
+		(gControllerOne->button & R_TRIG) &&
+		(gControllerOne->button & Z_TRIG) &&
+		(gControllerOne->button & B_BUTTON)) {
+			gGamestateNext = ENDING;
+	}
+#endif
+
     switch (gGamestate) {
         case 7:
             game_init_clear_framebuffer();

@@ -2,6 +2,7 @@
 #define BOMB_KART_H
 
 #include "common_structs.h"
+#include <mk64.h>
 
 #define NUM_BOMB_KARTS_MAX    7
 #define NUM_BOMB_KARTS_VERSUS 7
@@ -52,12 +53,12 @@ typedef struct {
 } BombKart; // size = 0x54
 
 //! Indexes for the objects associated with the Bomb Karts
-extern s32 D_80183DD8[NUM_BOMB_KARTS_MAX];
+extern s32 gIndexObjectBombKart[NUM_BOMB_KARTS_MAX];
 
 extern BombKart gBombKarts[NUM_BOMB_KARTS_MAX];
 extern Collision D_80164038[NUM_BOMB_KARTS_MAX];
 
 // data/data_0DD0A0_1.s
-extern BombKartSpawn D_800DCC08[NUM_COURSES][NUM_BOMB_KARTS_MAX];
+extern BombKartSpawn gBombKartSpawns[NUM_COURSES][NUM_BOMB_KARTS_MAX];
 
 #endif

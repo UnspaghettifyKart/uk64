@@ -103,15 +103,11 @@ Acmd *synthesis_execute(Acmd*, s32*, s16*, s32);
 Acmd *synthesis_resample_and_mix_reverb(Acmd*, s32, s16, s16);
 Acmd *synthesis_save_reverb_samples(Acmd*, s16, s16);
 Acmd *synthesis_do_one_audio_update(s16*, s32, Acmd*, s32);
-Acmd *synthesis_process_note(s32, struct NoteSubEu*, struct NoteSynthesisState*, s16*, s32, Acmd*, s32);
+Acmd *synthesis_process_note(s32 noteIndex, struct NoteSubEu *noteSubEu, struct NoteSynthesisState *synthesisState, s16 *aiBuf, s32 inBuf, Acmd *cmd, s32 updateIndex);
 Acmd *load_wave_samples(Acmd *acmd, struct NoteSubEu *noteSubEu, struct NoteSynthesisState *synthesisState, s32 nSamplesToLoad);
 Acmd *final_resample(Acmd *acmd, struct NoteSynthesisState *synthesisState, s32 count, u16 pitch, u16 dmemIn, u32 flags);
 Acmd *func_800B86A0(Acmd *cmd, struct NoteSubEu *note, struct NoteSynthesisState *synthesisState, s32 nSamples, u16 inBuf, s32 headsetPanSettings, u32 flags);
 Acmd *note_apply_headset_pan_effects(Acmd *acmd, struct NoteSubEu *noteSubEu, struct NoteSynthesisState *note, s32 bufLen, s32 flags, s32 leftRight);
-
-// These 2 are almost certainly misnamed and misplaced
-extern u64 gGfxSPTaskOutputBuffer[];
-extern u32 gGfxSPTaskOutputBufferSize;
 
 extern struct SynthesisReverb gSynthesisReverbs[4];
 
