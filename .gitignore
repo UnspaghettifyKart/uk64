@@ -98,6 +98,7 @@ docs/html/*
 mod_file/**/*.c
 hook.bin
 docs/doxygen_syms.md
+*.out.c
 
 # windows build
 mingw64/
