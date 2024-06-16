@@ -24,7 +24,7 @@ TARGET_N64 ?= 1
 #   ido - uses the SGI IRIS Development Option compiler, which is used to build
 #         an original matching N64 ROM
 #   gcc - uses the GNU C Compiler
-COMPILER ?= gcc
+COMPILER ?= ido
 $(eval $(call validate-option,COMPILER,ido gcc))
 
 # Add debug tools with 'make DEBUG=1' and modify the macros in include/debug.h
@@ -209,6 +209,24 @@ BIN_DIR        := bin
 DATA_DIR       := data
 INCLUDE_DIRS   := include vanilla
 
+MIO0TOOL              := $(TOOLS_DIR)/mio0
+N64CKSUM              := $(TOOLS_DIR)/n64cksum
+N64GRAPHICS           := $(TOOLS_DIR)/n64graphics
+DLPACKER              := $(TOOLS_DIR)/displaylist_packer
+BIN2C                 := $(PYTHON) $(TOOLS_DIR)/bin2c.py
+EXTRACT_DATA_FOR_MIO  := $(TOOLS_DIR)/extract_data_for_mio
+ASSET_EXTRACT         := $(PYTHON) $(TOOLS_DIR)/new_extract_assets.py
+LINKONLY_GENERATOR    := $(PYTHON) $(TOOLS_DIR)/linkonly_generator.py
+TORCH                 := $(TOOLS_DIR)/torch/cmake-build-release/torch
+EMULATOR               = mupen64plus
+EMU_FLAGS              = --noosd
+LOADER                 = loader64
+LOADER_FLAGS           = -vwf
+SHA1SUM               ?= sha1sum
+FALSE                 ?= false
+PRINT                 ?= printf
+TOUCH                 ?= touch
+
 #==============================================================================#
 # Compiler Options                                                             #
 #==============================================================================#
@@ -289,6 +307,30 @@ CC_CHECK += -m32
 # Prevent a crash with -sopt
 export LANG := C
 
+# Use Objcopy instead of extract_data_for_mio
+ifeq ($(GCC), 1)
+  EXTRACT_DATA_FOR_MIO := $(OBJCOPY) -O binary --only-section=.data
+endif
+
+# Common build print status function
+define print
+  @$(PRINT) "$(GREEN)$(1) $(YELLOW)$(2)$(GREEN) -> $(BLUE)$(3)$(NO_COL)\n"
+endef
+
+# Override commmands for GCC Safe Files
+ifeq ($(GCC),1)
+  $(BUILD_DIR)/src/main.o:                          OPT_FLAGS := -g
+  $(BUILD_DIR)/src/racing/skybox_and_splitscreen.o: OPT_FLAGS := -g
+  $(BUILD_DIR)/src/racing/render_courses.o:         OPT_FLAGS := -g
+  $(SAFE_C_FILES): OPT_FLAGS := -O3
+  $(SAFE_C_FILES): CC        := $(CROSS)gcc
+  $(SAFE_C_FILES): MIPSISET  := -mips3
+  $(SAFE_C_FILES): CFLAGS    := -G 0 $(OPT_FLAGS) $(TARGET_CFLAGS) $(MIPSISET) $(DEF_INC_CFLAGS) -mno-shared -march=vr4300 -mfix4300 -mabi=32 -mhard-float \
+   -mdivide-breaks -fno-stack-protector -fno-common -fno-zero-initialized-in-bss -fno-PIC -mno-abicalls -fno-strict-aliasing -fno-inline-functions          \
+   -ffreestanding -fwrapv -Wall -Wextra -ffast-math -fno-unsafe-math-optimizations
+  $(SAFE_C_FILES): CC_CHECK := gcc -m32
+endif
+
 #==============================================================================#
 # Target Executable and Sources                                                #
 #==============================================================================#
@@ -312,14 +354,6 @@ ALL_DIRS = $(BUILD_DIR) $(addprefix $(BUILD_DIR)/,$(SRC_DIRS) $(COURSE_DIRS) inc
 MAKEFILE_SPLIT = Makefile.split
 include $(MAKEFILE_SPLIT)
 
-ifneq ($(shell find src -type f -name '*.o' -delete),)
-  $(error Failed to remove out.c files in src)
-endif
-
-ifneq ($(shell find mods -type f -name '*.o' -delete),)
-  $(error Failed to remove out.c files in mods)
-endif
-
 MODS_SEGMENT :=
 MODS_SEGMENT_BSS :=
 
@@ -327,7 +361,7 @@ MODS_SEGMENT_BSS :=
 # We filter them out from the regular C_FILES since we don't need nor want the
 # UTF-8 versions getting compiled
 # EUC_JP_FILES := src/ending/credits.c src/code_80005FD0.c src/code_80091750.c
-C_FILES := $(filter-out %.inc.c,$(foreach dir,$(SRC_DIRS),$(wildcard $(dir)/*.c)))
+C_FILES := $(filter-out %.out.c,$(filter-out %.inc.c,$(foreach dir,$(SRC_DIRS),$(wildcard $(dir)/*.c))))
 S_FILES := $(foreach dir,$(ASM_DIRS),$(wildcard $(dir)/*.s))
 # Include source files in courses/course_name/files.c but exclude .inc.c files.
 COURSE_FILES := $(foreach dir,$(COURSE_DIRS),$(filter-out %.inc.c,$(wildcard $(dir)/*.c)))
@@ -342,7 +376,7 @@ O_FILES := \
 
 MODS_DIR := mods
 
-# MOD_MAKE_INCLUDES := $(shell find $(MODS_DIR) -type f -name "mod.mk")
+MOD_MAKE_INCLUDES := $(shell find $(MODS_DIR) -type f -name "mod.mk")
 
 $(foreach inc,$(MOD_MAKE_INCLUDES),$(eval include $(inc)))
 
@@ -365,24 +399,6 @@ GLOBAL_ASM_RACING_O_FILES = $(foreach file,$(GLOBAL_ASM_RACING_C_FILES),$(BUILD_
 # Miscellaneous Tools                                                          #
 #==============================================================================#
 
-MIO0TOOL              := $(TOOLS_DIR)/mio0
-N64CKSUM              := $(TOOLS_DIR)/n64cksum
-N64GRAPHICS           := $(TOOLS_DIR)/n64graphics
-DLPACKER              := $(TOOLS_DIR)/displaylist_packer
-BIN2C                 := $(PYTHON) $(TOOLS_DIR)/bin2c.py
-EXTRACT_DATA_FOR_MIO  := $(TOOLS_DIR)/extract_data_for_mio
-ASSET_EXTRACT         := $(PYTHON) $(TOOLS_DIR)/new_extract_assets.py
-LINKONLY_GENERATOR    := $(PYTHON) $(TOOLS_DIR)/linkonly_generator.py
-TORCH                 := $(TOOLS_DIR)/torch/cmake-build-release/torch
-EMULATOR               = mupen64plus
-EMU_FLAGS              = --noosd
-LOADER                 = loader64
-LOADER_FLAGS           = -vwf
-SHA1SUM               ?= sha1sum
-FALSE                 ?= false
-PRINT                 ?= printf
-TOUCH                 ?= touch
-
 ifeq ($(COLOR),1)
 NO_COL  := \033[0m
 RED     := \033[0;31m
@@ -391,31 +407,6 @@ BLUE    := \033[0;34m
 YELLOW  := \033[0;33m
 BLINK   := \033[33;5m
 endif
-
-# Use Objcopy instead of extract_data_for_mio
-ifeq ($(COMPILER),gcc)
-  EXTRACT_DATA_FOR_MIO := $(OBJCOPY) -O binary --only-section=.data
-endif
-
-# Common build print status function
-define print
-  @$(PRINT) "$(GREEN)$(1) $(YELLOW)$(2)$(GREEN) -> $(BLUE)$(3)$(NO_COL)\n"
-endef
-
-# Override commmands for GCC Safe Files
-ifeq ($(GCC),1)
-  $(BUILD_DIR)/src/main.o:                          OPT_FLAGS := -g
-  $(BUILD_DIR)/src/racing/skybox_and_splitscreen.o: OPT_FLAGS := -g
-  $(BUILD_DIR)/src/racing/render_courses.o:         OPT_FLAGS := -g
-  $(SAFE_C_FILES): OPT_FLAGS := -O3
-  $(SAFE_C_FILES): CC        := $(CROSS)gcc
-  $(SAFE_C_FILES): MIPSISET  := -mips3
-  $(SAFE_C_FILES): CFLAGS    := -G 0 $(OPT_FLAGS) $(TARGET_CFLAGS) $(MIPSISET) $(DEF_INC_CFLAGS) -mno-shared -march=vr4300 -mfix4300 -mabi=32 -mhard-float \
-   -mdivide-breaks -fno-stack-protector -fno-common -fno-zero-initialized-in-bss -fno-PIC -mno-abicalls -fno-strict-aliasing -fno-inline-functions          \
-   -ffreestanding -fwrapv -Wall -Wextra -ffast-math -fno-unsafe-math-optimizations
-  $(SAFE_C_FILES): CC_CHECK := gcc -m32
-endif
-
 
 
 #==============================================================================#

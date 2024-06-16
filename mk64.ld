@@ -25,16 +25,34 @@ OUTPUT_ARCH (mips)
     _##name##SegmentSize = SIZEOF(.name); \
     __romPos += SIZEOF(.name);
 
+#define BEGIN_RAM_SEG(name) \
+    _##name##SegmentStart = ADDR(.name); \
+    _##name##SegmentRomStart = __romPos; \
+    .name __ramPos : AT(__romPos)
+
+#define END_RAM_SEG(name) \
+    _##name##SegmentEnd = ADDR(.name) + SIZEOF(.name); \
+    _##name##SegmentRomEnd = __romPos + SIZEOF(.name); \
+    _##name##SegmentSize = SIZEOF(.name); \
+    __romPos += SIZEOF(.name); \
+    __ramPos += SIZEOF(.name);
+
 #define BEGIN_NOLOAD(name) \
     _##name##SegmentNoloadStart = ADDR(.name.noload); \
     .name.noload (NOLOAD) :
 	
 #define END_NOLOAD(name) \
-    _##name##SegmentNoloadEnd = ADDR(.name.noload) + SIZEOF(.name.noload);
+    _##name##SegmentNoloadEnd = ADDR(.name.noload) + SIZEOF(.name.noload); \
+    __ramPos += SIZEOF(.name.noload);
+
+#define END_RAM_NOLOAD(name) \
+    _##name##SegmentNoloadEnd = ADDR(.name.noload) + SIZEOF(.name.noload); \
+    __ramPos += SIZEOF(.name.noload);
 
 SECTIONS
 {
    __romPos = 0;
+   __ramPos = 0x80000400;
 
    BEGIN_SEG(boot, 0xA4000000)
    {
@@ -44,7 +62,7 @@ SECTIONS
    END_SEG(boot)
 
    /* 0x80000400 001000-0D9B70 [D8B70] */
-   BEGIN_SEG(main, LINKER_MAIN) SUBALIGN(0x10)
+   BEGIN_RAM_SEG(main) SUBALIGN(0x10)
    {
       BUILD_DIR/asm/entry.o(.text);
       BUILD_DIR/src/main.o(.text*);
@@ -318,7 +336,7 @@ SECTIONS
       BUILD_DIR/data/rsp.o(.data);
       BUILD_DIR/src/audio/data.o(.data);
    }
-   END_SEG(main)
+   END_RAM_SEG(main)
 
    BEGIN_NOLOAD(main) {
       BUILD_DIR/src/main.o(.bss*);
@@ -363,18 +381,10 @@ SECTIONS
       BUILD_DIR/src/os/osLeoDiskInit.o(.bss*);
       . = ALIGN(0x10);
    }
-   END_NOLOAD(main)
-
-   /* Checks that segments are not overlapping into the memory pool but is not strictly necessary */
-   BEGIN_NOLOAD(memoryPool)
-   {
-      BUILD_DIR/src/buffers/memory_pool.o(.bss*);
-      . = ALIGN(0x10);
-   }
-   END_NOLOAD(memoryPool)
+   END_RAM_NOLOAD(main)
    
    /* 0x8028DF00 0F7510-123640 [2C130] */
-   BEGIN_SEG(racing, LINKER_RACING)
+   BEGIN_RAM_SEG(racing)
    {
       BUILD_DIR/src/racing/race_logic.o(.text*);
       BUILD_DIR/src/racing/render_courses.o(.text*);
@@ -401,7 +411,7 @@ SECTIONS
       BUILD_DIR/src/racing/actors_extended.o(.rodata*);
       BUILD_DIR/src/racing/math_util.o(.rodata*);
    }
-   END_SEG(racing)
+   END_RAM_SEG(racing)
 
 	BEGIN_NOLOAD(racing)
    {
@@ -411,7 +421,7 @@ SECTIONS
       BUILD_DIR/src/buffers/random.o(.bss*);
       . = ALIGN(0x10);
    }
-   END_NOLOAD(racing)
+   END_RAM_NOLOAD(racing)
 
    BEGIN_NOLOAD(buffers)
    {
@@ -424,11 +434,34 @@ SECTIONS
       BUILD_DIR/src/audio/data.o(.bss*);
       . = ALIGN(0x8);
    }
-   END_NOLOAD(buffers)
+   END_RAM_NOLOAD(buffers)
 
+   BEGIN_RAM_SEG(trigTables)
+   {
+        BUILD_DIR/src/buffers/trig_tables.o(.data);
+        . = ALIGN(0x10);
+   }
+   END_RAM_SEG(trigTables)
+   
+   BEGIN_RAM_SEG(mods)
+   {
+      /* BUILD_DIR/mod_file/files.o(.text)
+      BUILD_DIR/mod_file/files.o(.data)
+      BUILD_DIR/mod_file/files.o(.rodata) */
+      MODS_SEGMENT
+      . = ALIGN(0x10);
+   }
+   END_RAM_SEG(mods)
 
-   /* 0x80280000 123640-12AAE0 [74A0] */
-   BEGIN_SEG(ending, LINKER_ENDING)
+   BEGIN_NOLOAD(mods)
+   {
+      /* BUILD_DIR/mod_file/files.o(.bss) */
+      MODS_SEGMENT_BSS
+      . = ALIGN(0x10);
+   }
+   END_RAM_NOLOAD(mods)
+
+   BEGIN_RAM_SEG(ending)
    {
       BUILD_DIR/src/ending/code_80280000.o(.text*);
       BUILD_DIR/src/ending/podium_ceremony_actors.o(.text*);
@@ -449,7 +482,7 @@ SECTIONS
       BUILD_DIR/src/ending/credits.o(.rodata*);
       BUILD_DIR/src/ending/ceremony_and_credits.o(.rodata*);
    }
-   END_SEG(ending)
+   END_RAM_SEG(ending)
 
    BEGIN_NOLOAD(ending) {
       BUILD_DIR/src/ending/code_80280000.o(.bss*);
@@ -458,25 +491,15 @@ SECTIONS
       BUILD_DIR/src/ending/ceremony_and_credits.o(.bss*);
       . = ALIGN(0x10);
    }
-   END_NOLOAD(ending)
-   
-   BEGIN_SEG(mods, SEG_MODS)
-   {
-      /* BUILD_DIR/mod_file/files.o(.text)
-      BUILD_DIR/mod_file/files.o(.data)
-      BUILD_DIR/mod_file/files.o(.rodata) */
-      MODS_SEGMENT
-      . = ALIGN(0x10);
-   }
-   END_SEG(mods)
+   END_RAM_NOLOAD(ending)
 
-   BEGIN_NOLOAD(mods)
+   /* Checks that segments are not overlapping into the memory pool but is not strictly necessary */
+   BEGIN_NOLOAD(memoryPool)
    {
-      /* BUILD_DIR/mod_file/files.o(.bss) */
-      MODS_SEGMENT_BSS
+      BUILD_DIR/src/buffers/memory_pool.o(.bss*);
       . = ALIGN(0x10);
    }
-   END_NOLOAD(mods)
+   END_RAM_NOLOAD(memoryPool)
 
    /* 0x801978D0 12AAE0-132B50 [8070] */
    /* texture tables and DLs, set as segment 0x02 */
@@ -521,12 +544,6 @@ SECTIONS
    END_SEG(other_textures)
 
    /* 0x802BA370 724220-729A30 [0x5810] */
-   BEGIN_SEG(trigTables, _buffersSegmentNoloadStart)
-   {
-        BUILD_DIR/src/buffers/trig_tables.o(.data);
-        . = ALIGN(0x10);
-   }
-   END_SEG(trigTables)
 
    /* 0x0A000000 729A30-7E684F [BCE20] */
    BEGIN_SEG(textures_0a, 0x0A000000)
@@ -597,6 +614,7 @@ SECTIONS
       BEGIN_SEG(name, 0x09000000) \
       { \
          BUILD_DIR/courses/dir/course_offsets.o(.data); \
+         BUILD_DIR/courses/dir/course_offsets.o(.rodata); \
          . = ALIGN(0x10); \
       } \
       END_SEG(name)
@@ -688,9 +706,9 @@ SECTIONS
    }
 
    ASSERT((_mainSegmentNoloadEnd <= _memoryPoolSegmentNoloadStart), "Error: Main segment extended into the memory pool.")
-   ASSERT((_memoryPoolSegmentNoloadEnd <= _endingSegmentStart), "Error: Memory pool extended into the ending segment.")
-   ASSERT((_endingSegmentNoloadEnd <= _racingSegmentStart), "Error: Ending segment extended into the racing segment.")
+   /* ASSERT((_memoryPoolSegmentNoloadEnd <= _endingSegmentStart), "Error: Memory pool extended into the ending segment.") */
+   /* ASSERT((_endingSegmentNoloadEnd <= _racingSegmentStart), "Error: Ending segment extended into the racing segment.") */
    ASSERT((_racingSegmentNoloadEnd <= _buffersSegmentNoloadStart), "Error: Racing segment extended into the buffers segment.")
    ASSERT((_buffersSegmentNoloadEnd <= RDRAM_END), "Error: Buffers segment extended past 8MB of memory")
-   ASSERT((_buffersSegmentNoloadEnd <= RDRAM_END), "Error: Buffers segment extended into trig tables segment.")
+   ASSERT((__ramPos <= RDRAM_END), "Error: Buffers segment extended into trig tables segment.")
 }

@@ -1,9 +1,9 @@
 #include <ultra64.h>
-#include <hooks.h>
+#include <hook.h>
 #include <libc/stdio.h>
 #include "display_profiler.h"
 #include "code_80091750.h"
-#include "common_textures.h"
+#include <assets/common_data.h>
 #include "data_segment2.h"
 #include "profiler.h"
 

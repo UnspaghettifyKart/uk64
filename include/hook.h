@@ -8,9 +8,8 @@
 #define VARIABLE_WRITE "write"
 #define CONSTANT "constant"
 
-#define HOOK(file, function, position, cancellable, priority)
+#define HOOK(function, position, cancellable, priority)
 #define AT(position)
-
-#define HOOK_METHOD(file, function) (#file #function)
+#define AT_METHOD(function, position) function##_##position
 
 #endif

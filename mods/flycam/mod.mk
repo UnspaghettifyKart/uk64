@@ -9,10 +9,10 @@ $(BUILD_DIR)/src/camera.o: CC := ./tools/hooks $(CC)
 
 O_FILES += $(BUILD_DIR)/mods/flycam/flycam.o
 
-MODS_SEGMENT += $(BUILD_DIR)/mods/flycam/flycam.o(.text);
-MODS_SEGMENT += $(BUILD_DIR)/mods/flycam/flycam.o(.data);
-MODS_SEGMENT += $(BUILD_DIR)/mods/flycam/flycam.o(.rodata);
-MODS_SEGMENT_BSS += $(BUILD_DIR)/mods/flycam/flycam.o(.bss);
+MODS_SEGMENT += $(BUILD_DIR)/mods/flycam/flycam.o(.text*);
+MODS_SEGMENT += $(BUILD_DIR)/mods/flycam/flycam.o(.data*);
+MODS_SEGMENT += $(BUILD_DIR)/mods/flycam/flycam.o(.rodata*);
+MODS_SEGMENT_BSS += $(BUILD_DIR)/mods/flycam/flycam.o(.bss*);
 
 
 ALL_DIRS += $(BUILD_DIR)/mods/flycam

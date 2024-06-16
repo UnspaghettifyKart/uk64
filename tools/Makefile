@@ -30,13 +30,14 @@ n64cksum_CFLAGS := -DN64CKSUM_STANDALONE
 extract_data_for_mio_SOURCES := extract_data_for_mio.c
 
 # Build tools and recomp
-all: $(PROGRAMS) torch hook
+all: $(PROGRAMS) torch hooks
 
 torch:
 	@echo "Building Torch..."
 	$(MAKE) -C torch type=release -j$(N_THREADS)
 
-hook:
+hooks:
+	@echo "Building hook..."
 	gcc -o hooks hook/main.c hook/list.c -Wall -Wextra -Wno-unused-parameter -O2
 
 # Remove generated files

@@ -1437,21 +1437,21 @@ void func_80295D88(void) {
             func_80295C6C();
             D_8015F8E4 = gCourseMinY - 10.0f;
             // d_course_wario_stadium_packed_dl_C50
-            find_vtx_and_set_colours(d_course_wario_stadium_packed_dl_C50, 100, 255, 255, 255);
+            find_vtx_and_set_colours((uintptr_t)d_course_wario_stadium_packed_dl_C50, 100, 255, 255, 255);
             // d_course_wario_stadium_packed_dl_BD8
-            find_vtx_and_set_colours(d_course_wario_stadium_packed_dl_BD8, 100, 255, 255, 255);
+            find_vtx_and_set_colours((uintptr_t)d_course_wario_stadium_packed_dl_BD8, 100, 255, 255, 255);
             // d_course_wario_stadium_packed_dl_B60
-            find_vtx_and_set_colours(d_course_wario_stadium_packed_dl_B60, 100, 255, 255, 255);
+            find_vtx_and_set_colours((uintptr_t)d_course_wario_stadium_packed_dl_B60, 100, 255, 255, 255);
             // d_course_wario_stadium_packed_dl_AE8
-            find_vtx_and_set_colours(d_course_wario_stadium_packed_dl_AE8, 100, 255, 255, 255);
+            find_vtx_and_set_colours((uintptr_t)d_course_wario_stadium_packed_dl_AE8, 100, 255, 255, 255);
             // d_course_wario_stadium_packed_dl_CC8
-            find_vtx_and_set_colours(d_course_wario_stadium_packed_dl_CC8, 100, 255, 255, 255);
+            find_vtx_and_set_colours((uintptr_t)d_course_wario_stadium_packed_dl_CC8, 100, 255, 255, 255);
             // d_course_wario_stadium_packed_dl_D50
-            find_vtx_and_set_colours(d_course_wario_stadium_packed_dl_D50, 100, 255, 255, 255);
+            find_vtx_and_set_colours((uintptr_t)d_course_wario_stadium_packed_dl_D50, 100, 255, 255, 255);
             // d_course_wario_stadium_packed_dl_DD0
-            find_vtx_and_set_colours(d_course_wario_stadium_packed_dl_DD0, 100, 255, 255, 255);
+            find_vtx_and_set_colours((uintptr_t)d_course_wario_stadium_packed_dl_DD0, 100, 255, 255, 255);
             // d_course_wario_stadium_packed_dl_E48
-            find_vtx_and_set_colours(d_course_wario_stadium_packed_dl_E48, 100, 255, 255, 255);
+            find_vtx_and_set_colours((uintptr_t)d_course_wario_stadium_packed_dl_E48, 100, 255, 255, 255);
             break;
         case COURSE_BLOCK_FORT:
             // d_course_block_fort_packed_dl_15C0

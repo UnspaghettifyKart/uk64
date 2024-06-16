@@ -1309,7 +1309,7 @@ void func_8002A8A4(Player *player, s8 arg1) {
 }
 
 void kart_hop(Player *player) {
-    player->kartHopJerk = gKartHopJerkTable[player->characterId];
+    player->kartHopJerk = -gKartHopJerkTable[player->characterId];
     player->kartHopAcceleration = 0.0f;
     player->kartHopVelocity = gKartHopInitialVelocityTable[player->characterId];
     player->effects |= 2;

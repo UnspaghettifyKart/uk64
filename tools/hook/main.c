@@ -38,7 +38,6 @@ List list_hook = {NULL, NULL, 0};
 
 typedef struct {
     char source[STR_SIZE];
-    char file[STR_SIZE];
     char function[STR_SIZE];
     char at[STR_SIZE];
     bool cancelable;
@@ -77,7 +76,7 @@ void print_list_hook() {
     ListElement *element = list_hook.head;
     while (element) {
         Hook *hook = element->data;
-        printf("Hook: %s %s %s\n", hook->file, hook->function, hook->at);
+        printf("Hook: %s %s %d %d\n", hook->function, hook->at, hook->cancelable, hook->priority);
         element = element->next;
     }
 }
@@ -175,7 +174,7 @@ void insert_function(FILE* file_out, Hook *hook, char full_arg_list[16][STR_SIZE
                 fprintf(file_out, ", ");
             }
             fprintf(file_out, "&cancel);\n");
-            fprintf(file_out, "    if (!cancel) { return; }\n");
+            fprintf(file_out, "    if (cancel) { return; }\n");
         } else {
             fprintf(file_out, "    result = %s(", hook->function_call);
             insert_arg(file_out, full_arg_list, hook->num_args);
@@ -183,7 +182,7 @@ void insert_function(FILE* file_out, Hook *hook, char full_arg_list[16][STR_SIZE
                 fprintf(file_out, ", ");
             }
             fprintf(file_out, "&cancel);\n");
-            fprintf(file_out, "    if (!cancel) { return result; }\n");
+            fprintf(file_out, "    if (cancel) { return result; }\n");
         }
     } else {
         fprintf(file_out, "    %s(", hook->function_call);
@@ -349,22 +348,22 @@ char* get_and_apply_hooks(char *file_name) {
                     if (in_hook_level == parenthesis_count && in_hook) {
                         in_hook = false;
 
-                        strcpy(hook->file, full_arg_list[0]);
-                        strcpy(hook->function, full_arg_list[1]);
-                        strcpy(hook->at, full_arg_list[2]);
+                        strcpy(hook->function, full_arg_list[0]);
+                        strcpy(hook->at, full_arg_list[1]);
 
                         for (int i = 0; i <= full_arg_list_idx; i++) {
                             printf("Arg: %s\n", full_arg_list[i]);
                         }
 
-                        if (full_arg_list_idx > 3) {
-                            hook->cancelable = (strcmp(full_arg_list[3], "TRUE") == 0) || (strcmp(full_arg_list[3], "true") == 0);
+                        if (full_arg_list_idx > 1) {
+                            printf("cancelable: %s %d\n", full_arg_list[2], strncmp(full_arg_list[2], "TRUE", 4));
+                            hook->cancelable = (strncmp(full_arg_list[2], "TRUE", 4) == 0) || (strncmp(full_arg_list[2], "true", 4) == 0);
                         } else {
                             hook->cancelable = false;
                         }
 
-                        if (full_arg_list_idx > 4) {
-                            hook->priority = atoi(full_arg_list[4]);
+                        if (full_arg_list_idx > 2) {
+                            hook->priority = atoi(full_arg_list[3]);
                         } else {
                             hook->priority = 0;
                         }
@@ -431,14 +430,15 @@ char* get_and_apply_hooks(char *file_name) {
                     if (finalise_hook) {
                         strcpy(hook->function_call, function_name);
                         hook->num_args = full_arg_list_idx;
-                        // hook->num_args++;
+                        hook->num_args++;
                         if (hook->cancelable) {
                             hook->num_args--;
                         }
-                        printf("function name: %s\n", hook->function_call);
+                        printf("functions name: %s\n", hook->function_call);
                         for (int i = 0; i <= full_arg_list_idx; i++) {
                             printf("Arg: %s\n", full_arg_list[i]);
                         }
+                        print_list_hook();
                         list_append(&list_hook, hook);
                         hook = NULL;
                         finalise_hook = false;
@@ -466,7 +466,6 @@ char* get_and_apply_hooks(char *file_name) {
                         strcpy(hook->source, file_name);
                         in_hook = true;
                         in_hook_level = parenthesis_count;
-                        printf("Hook level: %d\n", in_hook_level);
                     }
                     parenthesis_count++;
                 }

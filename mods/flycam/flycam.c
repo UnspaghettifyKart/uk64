@@ -45,7 +45,7 @@ void flycam_move_camera_up(Camera* camera, struct Controller *controller, f32 di
 void flycam_save_state(Camera *camera);
 void flycam_load_state(Camera *camera);
 
-HOOK("src/render_player.c", check_player_camera_collision, AT(FUNCTION_CALL), TRUE, 0)
+HOOK(check_player_camera_collision, AT(FUNCTION_CALL), TRUE, 0)
 u16 ignore_for_flycam(bool* cancel) {
     if (mod_isFlycam) {
         *cancel = TRUE;
@@ -53,15 +53,15 @@ u16 ignore_for_flycam(bool* cancel) {
     }
 }
 
-HOOK("src/racing/math_util.c", is_within_render_distance, AT(FUNCTION_CALL), TRUE, 0)
-f32 ignore_render_distance(bool* cancel){
+HOOK(is_within_render_distance, AT(FUNCTION_CALL), TRUE, 0)
+f32 ignore_render_distance(bool* cancel) {
     if (mod_isFlycam) {
         *cancel = TRUE;
         return 1.0;
     }
 }
 
-HOOK("src/racing/render_courses.c", load_surface_map, AT(FUNCTION_RETURN), FALSE, 0)
+HOOK(load_surface_map, AT(FUNCTION_RETURN), FALSE, 0)
 void over_load_surface_map(UNUSED uintptr_t addr, UNUSED struct UnkStruct_800DC5EC *arg1) {
     if (mod_isFlycam) {
         gDisplayListHead--; // remove gSPDisplayList(gDisplayListHead++, gfx[temp_v1]); instruction
@@ -93,7 +93,7 @@ void over_load_surface_map(UNUSED uintptr_t addr, UNUSED struct UnkStruct_800DC5
  * Camera mode 2: Enter flycam at previous flycam spot
  * 
 */
-HOOK("src/camera.c", func_8001E45C, AT(FUNCTION_CALL), TRUE, 0)
+HOOK(func_8001E45C, AT(FUNCTION_CALL), TRUE, 0)
 void flycam(Camera *camera, Player *player, UNUSED s8 index, bool* cancel) {
     struct Controller *controller = &gControllers[0];
     if (controller->buttonPressed & L_TRIG && last_pressed != (controller->buttonPressed & L_TRIG)) {
