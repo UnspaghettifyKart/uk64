@@ -54,7 +54,7 @@ SECTIONS
       BUILD_DIR/src/code_80004740.o(.text*);
       BUILD_DIR/src/staff_ghosts.o(.text*);
       BUILD_DIR/asm/unused_overflow_check.o(.text);
-      BUILD_DIR/src/code_80005FD0.jp.o(.text*);
+      BUILD_DIR/src/code_80005FD0.o(.text*);
       BUILD_DIR/src/camera.o(.text*);
       BUILD_DIR/src/render_player.o(.text*);
       BUILD_DIR/src/kart_dma.o(.text*);
@@ -73,7 +73,7 @@ SECTIONS
       BUILD_DIR/src/code_80086E70.o(.text*);
       BUILD_DIR/src/effects.o(.text*);
       BUILD_DIR/src/code_80091440.o(.text*);
-      BUILD_DIR/src/code_80091750.jp.o(.text*);
+      BUILD_DIR/src/code_80091750.o(.text*);
       BUILD_DIR/src/code_800AF9B0.o(.text*);
       BUILD_DIR/src/menus.o(.text*);
       BUILD_DIR/src/save.o(.text*);
@@ -233,7 +233,7 @@ SECTIONS
       BUILD_DIR/src/data/some_data.o(.data*);
       BUILD_DIR/src/effects.o(.data*);
       BUILD_DIR/src/code_80091440.o(.data*);
-      BUILD_DIR/src/code_80091750.jp.o(.data*);
+      BUILD_DIR/src/code_80091750.o(.data*);
       BUILD_DIR/src/code_800AF9B0.o(.data*);
       BUILD_DIR/src/menus.o(.data*);
       BUILD_DIR/src/save.o(.data*);
@@ -269,7 +269,7 @@ SECTIONS
       BUILD_DIR/src/main.o(.rodata*);
       BUILD_DIR/src/code_80004740.o(.rodata*);
       BUILD_DIR/src/code_800029B0.o(.rodata*);
-      BUILD_DIR/src/code_80005FD0.jp.o(.rodata*);
+      BUILD_DIR/src/code_80005FD0.o(.rodata*);
       BUILD_DIR/src/camera.o(.rodata*);
       BUILD_DIR/src/render_player.o(.rodata*);
       BUILD_DIR/src/player_controller.o(.rodata*);
@@ -284,7 +284,7 @@ SECTIONS
       BUILD_DIR/src/code_80086E70.o(.rodata*);
       BUILD_DIR/src/effects.o(.rodata*);
       BUILD_DIR/src/code_80091440.o(.rodata*);
-      BUILD_DIR/src/code_80091750.jp.o(.rodata*);
+      BUILD_DIR/src/code_80091750.o(.rodata*);
       BUILD_DIR/src/code_800AF9B0.o(.rodata*);
       BUILD_DIR/src/menus.o(.rodata*);
       BUILD_DIR/src/save.o(.rodata*);
@@ -297,7 +297,6 @@ SECTIONS
       BUILD_DIR/src/audio/port_eu.o(.rodata*);
       #if DEBUG
          BUILD_DIR/src/debug/crash_screen_enhancement.o(.rodata*);
-         BUILD_DIR/src/debug/debug.o(.rodata*);
          BUILD_DIR/src/os/sprintf.o(.rodata*);
       #endif
       BUILD_DIR/src/os/guOrthoF.o(.rodata*);
@@ -328,20 +327,19 @@ SECTIONS
       BUILD_DIR/src/crash_screen.o(.bss*);
       BUILD_DIR/src/code_80004740.o(.bss*);
       BUILD_DIR/src/staff_ghosts.o(.bss*);
-      BUILD_DIR/src/code_80005FD0.jp.o(.bss*);
+      BUILD_DIR/src/code_80005FD0.o(.bss*);
       BUILD_DIR/src/camera.o(.bss*);
       BUILD_DIR/src/render_player.o(.bss*);
       BUILD_DIR/src/spawn_players.o(.bss*);
       BUILD_DIR/src/code_80057C60.o(.bss*);
       BUILD_DIR/src/code_80057C60_var.o(.bss*);
       BUILD_DIR/src/effects.o(.bss*);
-      BUILD_DIR/src/code_80091750.jp.o(.bss*);
+      BUILD_DIR/src/code_80091750.o(.bss*);
       BUILD_DIR/src/code_800AF9B0.o(.bss*);
       BUILD_DIR/src/menus.o(.bss*);
       #if DEBUG
          BUILD_DIR/src/os/osCartRomInit.o(.bss*);
          BUILD_DIR/src/debug/crash_screen_enhancement.o(.bss*);
-         BUILD_DIR/src/debug/debug.o(.bss*);
          BUILD_DIR/src/os/is_debug.o(.bss*);
          BUILD_DIR/src/os/sprintf.o(.bss*);
       #endif
@@ -441,14 +439,14 @@ SECTIONS
       BUILD_DIR/src/ending/podium_ceremony_actors.o(.data*);
       BUILD_DIR/src/ending/code_80281780.o(.data*);
       BUILD_DIR/src/ending/dl_unk_80284EE0.o(.data*);
-      BUILD_DIR/src/ending/credits.jp.o(.data*);
+      BUILD_DIR/src/ending/credits.o(.data*);
       BUILD_DIR/src/ending/ceremony_and_credits.o(.data*);
       BUILD_DIR/src/ending/code_80280000.o(.rodata*);
       BUILD_DIR/src/ending/podium_ceremony_actors.o(.rodata*);
       BUILD_DIR/src/ending/camera_junk.o(.rodata*);
       BUILD_DIR/src/ending/code_80281780.o(.rodata*);
       BUILD_DIR/src/ending/code_80281C40.o(.rodata*);
-      BUILD_DIR/src/ending/credits.jp.o(.rodata*);
+      BUILD_DIR/src/ending/credits.o(.rodata*);
       BUILD_DIR/src/ending/ceremony_and_credits.o(.rodata*);
    }
    END_SEG(ending)

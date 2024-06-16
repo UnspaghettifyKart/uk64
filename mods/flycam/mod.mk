@@ -1,7 +1,11 @@
 $(BUILD_DIR)/src/render_player.o: $(BUILD_DIR)/mods/flycam/flycam.o
+$(BUILD_DIR)/src/render_player.o: CC := ./tools/hooks $(CC)
 $(BUILD_DIR)/src/racing/math_util.o: $(BUILD_DIR)/mods/flycam/flycam.o
+$(BUILD_DIR)/src/racing/math_util.o: CC := ./tools/hooks $(CC)
 $(BUILD_DIR)/src/racing/render_courses.o: $(BUILD_DIR)/mods/flycam/flycam.o
+$(BUILD_DIR)/src/racing/render_courses.o: CC := ./tools/hooks $(CC)
 $(BUILD_DIR)/src/camera.o: $(BUILD_DIR)/mods/flycam/flycam.o
+$(BUILD_DIR)/src/camera.o: CC := ./tools/hooks $(CC)
 
 O_FILES += $(BUILD_DIR)/mods/flycam/flycam.o
 

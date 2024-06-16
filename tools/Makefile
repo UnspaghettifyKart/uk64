@@ -30,7 +30,7 @@ n64cksum_CFLAGS := -DN64CKSUM_STANDALONE
 extract_data_for_mio_SOURCES := extract_data_for_mio.c
 
 # Build tools and recomp
-all: $(PROGRAMS) torch
+all: $(PROGRAMS) torch hook
 
 torch:
 	@echo "Building Torch..."

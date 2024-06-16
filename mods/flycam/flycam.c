@@ -1,7 +1,6 @@
 #include <ultra64.h>
 #include <PR/os.h>
 #include <macros.h>
-#include <types.h>
 #include <defines.h>
 #include "flycam.h"
 
@@ -104,9 +103,9 @@ void flycam(Camera *camera, Player *player, UNUSED s8 index, bool* cancel) {
         // Don't use `bool = !bool` here as the game code can swap these on you.
         // Which will confuse the code. This forces it to always be correct
         if (mod_isFlycam) {
-            player->type |= PLAYER_CPU;
+            player->type |= PLAYER_KART_AI;
         } else {
-            player->type &= PLAYER_CPU;
+            player->type &= PLAYER_KART_AI;
         }
 
         gIsHUDVisible = !mod_isFlycam;

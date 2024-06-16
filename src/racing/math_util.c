@@ -939,40 +939,40 @@ f32 atan2f(f32 arg0, f32 arg1) {
     return atan2s(arg0, arg1);
 }
 
-UNUSED f32 func_802B79F0(f32 arg0, f32 arg1) {
-    f64 halfpi;
-    f32 temp_f0;
-    UNUSED f32 pad;
-    f32 temp_f2;
-    f32 var_f16;
-    f32 var_f2;
-    s32 var_v0;
+// UNUSED f32 func_802B79F0(f32 arg0, f32 arg1) {
+//     f64 halfpi;
+//     f32 temp_f0;
+//     UNUSED f32 pad;
+//     f32 temp_f2;
+//     f32 var_f16;
+//     f32 var_f2;
+//     s32 var_v0;
 
-    var_f16 = arg0 / arg1;
-    var_v0 = 0;
-    if (fabs(arg1) < fabs(arg0)) {
-        var_v0 = 1;
-    }
-    if (var_v0 != 0) {
-        var_f16 = arg1 / arg0;
-    }
-    temp_f0 = var_f16 * var_f16;
-    temp_f2 = temp_f0 * temp_f0;
-    var_f16 += ((((((((temp_f2 * ((-0.01600503f) + (temp_f0 * 0.00283406f))) + (-0.07495445f)) + (temp_f0 * 0.04258761f)) * (temp_f2 * temp_f2)) + (((-0.14202571f) + (temp_f0 * 0.10636754f)) * temp_f2)) + (-0.33333066f)) + (temp_f0 * 0.19992484f)) * (var_f16 * temp_f0));
+//     var_f16 = arg0 / arg1;
+//     var_v0 = 0;
+//     if (fabs(arg1) < fabs(arg0)) {
+//         var_v0 = 1;
+//     }
+//     if (var_v0 != 0) {
+//         var_f16 = arg1 / arg0;
+//     }
+//     temp_f0 = var_f16 * var_f16;
+//     temp_f2 = temp_f0 * temp_f0;
+//     var_f16 += ((((((((temp_f2 * ((-0.01600503f) + (temp_f0 * 0.00283406f))) + (-0.07495445f)) + (temp_f0 * 0.04258761f)) * (temp_f2 * temp_f2)) + (((-0.14202571f) + (temp_f0 * 0.10636754f)) * temp_f2)) + (-0.33333066f)) + (temp_f0 * 0.19992484f)) * (var_f16 * temp_f0));
 
-    if (var_v0 != 0) {
-        halfpi = 1.5707963267948966;
-        return (arg0 < 0.0f ? -halfpi : halfpi) - var_f16;
-    }
-    if (arg1 >= 0.0f) {
-        return var_f16;
-    }
-    var_f2 = var_f16 + 3.1415927f;
-    if (arg0 < 0.0f) {
-        var_f2 = var_f16 - 3.1415927f;
-    }
-    return var_f2;
-}
+//     if (var_v0 != 0) {
+//         halfpi = 1.5707963267948966;
+//         return (arg0 < 0.0f ? -halfpi : halfpi) - var_f16;
+//     }
+//     if (arg1 >= 0.0f) {
+//         return var_f16;
+//     }
+//     var_f2 = var_f16 + 3.1415927f;
+//     if (arg0 < 0.0f) {
+//         var_f2 = var_f16 - 3.1415927f;
+//     }
+//     return var_f2;
+// }
 
 UNUSED u16 func_802B7B50(f32 arg0, f32 arg1) {
     return ((atan2f(arg0, arg1) * 32768.0f) / M_PI);
@@ -1075,8 +1075,6 @@ s32 is_visible_between_angle(u16 arg0, u16 arg1, u16 arg2) {
     }
     return 1;
 }
-
-
 
 /**
  * Determines whether an object is within the render distance of a camera.
