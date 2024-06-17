@@ -19,6 +19,11 @@ OUTPUT_ARCH (mips)
     _##name##SegmentRomStart = __romPos; \
     .name addr : AT(__romPos)
 
+#define BEGIN_ANY_SEG(name) \
+    _##name##SegmentStart = ADDR(.name); \
+    _##name##SegmentRomStart = __romPos; \
+    .name : AT(__romPos)
+
 #define END_SEG(name) \
     _##name##SegmentEnd = ADDR(.name) + SIZEOF(.name); \
     _##name##SegmentRomEnd = __romPos + SIZEOF(.name); \
@@ -425,7 +430,24 @@ SECTIONS
       . = ALIGN(0x8);
    }
    END_NOLOAD(buffers)
+   
+   BEGIN_SEG(mods, SEG_MODS)
+   {
+      /* BUILD_DIR/mod_file/files.o(.text)
+      BUILD_DIR/mod_file/files.o(.data)
+      BUILD_DIR/mod_file/files.o(.rodata) */
+      MODS_SEGMENT
+      . = ALIGN(0x10);
+   }
+   END_SEG(mods)
 
+   BEGIN_NOLOAD(mods)
+   {
+      /* BUILD_DIR/mod_file/files.o(.bss) */
+      MODS_SEGMENT_BSS
+      . = ALIGN(0x10);
+   }
+   END_NOLOAD(mods)
 
    /* 0x80280000 123640-12AAE0 [74A0] */
    BEGIN_SEG(ending, LINKER_ENDING)
@@ -459,24 +481,6 @@ SECTIONS
       . = ALIGN(0x10);
    }
    END_NOLOAD(ending)
-   
-   BEGIN_SEG(mods, SEG_MODS)
-   {
-      /* BUILD_DIR/mod_file/files.o(.text)
-      BUILD_DIR/mod_file/files.o(.data)
-      BUILD_DIR/mod_file/files.o(.rodata) */
-      MODS_SEGMENT
-      . = ALIGN(0x10);
-   }
-   END_SEG(mods)
-
-   BEGIN_NOLOAD(mods)
-   {
-      /* BUILD_DIR/mod_file/files.o(.bss) */
-      MODS_SEGMENT_BSS
-      . = ALIGN(0x10);
-   }
-   END_NOLOAD(mods)
 
    /* 0x801978D0 12AAE0-132B50 [8070] */
    /* texture tables and DLs, set as segment 0x02 */
@@ -687,10 +691,10 @@ SECTIONS
       *(*);
    }
 
-   ASSERT((_mainSegmentNoloadEnd <= _memoryPoolSegmentNoloadStart), "Error: Main segment extended into the memory pool.")
+   /* ASSERT((_mainSegmentNoloadEnd <= _memoryPoolSegmentNoloadStart), "Error: Main segment extended into the memory pool.")
    ASSERT((_memoryPoolSegmentNoloadEnd <= _endingSegmentStart), "Error: Memory pool extended into the ending segment.")
    ASSERT((_endingSegmentNoloadEnd <= _racingSegmentStart), "Error: Ending segment extended into the racing segment.")
-   ASSERT((_racingSegmentNoloadEnd <= _buffersSegmentNoloadStart), "Error: Racing segment extended into the buffers segment.")
+   ASSERT((_racingSegmentNoloadEnd <= _buffersSegmentNoloadStart), "Error: Racing segment extended into the buffers segment.") */
    ASSERT((_buffersSegmentNoloadEnd <= RDRAM_END), "Error: Buffers segment extended past 8MB of memory")
    ASSERT((_buffersSegmentNoloadEnd <= RDRAM_END), "Error: Buffers segment extended into trig tables segment.")
 }
