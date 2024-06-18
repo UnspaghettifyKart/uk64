@@ -1,13 +1,15 @@
 #include <ultra64.h>
 #include "debug_variable_display_list.h"
-#include <hooks.h>
+#include <hook.h>
 #include <libc/stdio.h>
 #include "podium_ceremony_actors.h"
 #include "code_80280000.h"
 #include "menus.h"
 #include "code_80091750.h"
 #include "data_segment2.h"
-#include "common_textures.h"
+#include <assets/common_data.h>
+
+#include "debug_variable_display_list.inc.c"
 
 u8 sDisplayListState = OK;
 
@@ -17,8 +19,8 @@ static void u64_to_string(variableWatchAttributes *, u32, u8);
 static u32 _strlen(const char *);
 static void _memcpy(char *, const char *, u32);
 
-HOOK(read_controllers, AT(FUNCTION_CALL), 0)
-void dvdl_control(bool* cancel) {
+HOOK(read_controllers, AT(FUNCTION_CALL), FALSE, 0)
+void dvdl_control() {
 	if ((gControllerOne->button & L_TRIG) &&
 		(gControllerOne->button & R_TRIG) &&
 		(gControllerOne->button & Z_TRIG) &&
@@ -32,8 +34,8 @@ void dvdl_control(bool* cancel) {
 	}
 }
 
-HOOK(end_master_display_list, AT(FUNCTION_CALL), 0)
-void display_dvdl(bool* cancel) {
+HOOK(end_master_display_list, AT(FUNCTION_CALL), FALSE, 0)
+void display_dvdl() {
 	u32 variable;
 	u32 i, vNameLen;
 	u32 arraySize = 9;

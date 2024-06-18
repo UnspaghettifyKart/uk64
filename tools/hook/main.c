@@ -76,7 +76,7 @@ void print_list_hook() {
     ListElement *element = list_hook.head;
     while (element) {
         Hook *hook = element->data;
-        printf("Hook: %s %s %d %d\n", hook->function, hook->at, hook->cancelable, hook->priority);
+        printf("<Hook function=%s arg=%d at=%s cancelable=%d priority=%d>\n", hook->function, hook->num_args,hook->at, hook->cancelable, hook->priority);
         element = element->next;
     }
 }
@@ -168,25 +168,24 @@ void insert_function(FILE* file_out, Hook *hook, char full_arg_list[16][STR_SIZE
     
     if (hook->cancelable) {
         if (strncmp(return_type, "void", 4) == 0) {
-            fprintf(file_out, "    %s(", hook->function_call);
-            insert_arg(file_out, full_arg_list, hook->num_args);
-            if (hook->num_args > 0) {
-                fprintf(file_out, ", ");
-            }
-            fprintf(file_out, "&cancel);\n");
-            fprintf(file_out, "    if (cancel) { return; }\n");
+            fprintf(file_out, "    ");
         } else {
-            fprintf(file_out, "    result = %s(", hook->function_call);
-            insert_arg(file_out, full_arg_list, hook->num_args);
-            if (hook->num_args > 0) {
-                fprintf(file_out, ", ");
-            }
-            fprintf(file_out, "&cancel);\n");
-            fprintf(file_out, "    if (cancel) { return result; }\n");
+            fprintf(file_out, "    result = ", return_type);
         }
+        fprintf(file_out, "%s(", hook->function_call);
+        if (strncmp(full_arg_list[0], "oid", 3) != 0) {
+            insert_arg(file_out, full_arg_list, hook->num_args);
+        }
+        if (hook->num_args > 0) {
+            fprintf(file_out, ", ");
+        }
+        fprintf(file_out, "&cancel);\n");
+        fprintf(file_out, "    if (cancel) { return; }\n");
     } else {
         fprintf(file_out, "    %s(", hook->function_call);
-        insert_arg(file_out, full_arg_list, hook->num_args);
+        if (strncmp(full_arg_list[0], "oid", 3) != 0) {
+            insert_arg(file_out, full_arg_list, hook->num_args);
+        }
         fprintf(file_out, ");\n");
     }
 }
@@ -231,7 +230,9 @@ void insert_original_function(FILE* file, char *return_type, char* function_name
     } else {
         fprintf(file, "    original_%s(", function_name);
     }
-    insert_arg(file, full_arg_list, full_arg_list_idx+1);
+    if (strncmp(full_arg_list[0], "void", 3) != 0) {
+        insert_arg(file, full_arg_list, full_arg_list_idx+1);
+    }
     fprintf(file, ");\n");
 }
 
@@ -356,7 +357,6 @@ char* get_and_apply_hooks(char *file_name) {
                         }
 
                         if (full_arg_list_idx > 1) {
-                            printf("cancelable: %s %d\n", full_arg_list[2], strncmp(full_arg_list[2], "TRUE", 4));
                             hook->cancelable = (strncmp(full_arg_list[2], "TRUE", 4) == 0) || (strncmp(full_arg_list[2], "true", 4) == 0);
                         } else {
                             hook->cancelable = false;
@@ -430,7 +430,9 @@ char* get_and_apply_hooks(char *file_name) {
                     if (finalise_hook) {
                         strcpy(hook->function_call, function_name);
                         hook->num_args = full_arg_list_idx;
-                        hook->num_args++;
+                        if (full_arg_list[full_arg_list_idx][0] != '\0') {
+                            hook->num_args++;
+                        }
                         if (hook->cancelable) {
                             hook->num_args--;
                         }

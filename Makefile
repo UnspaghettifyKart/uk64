@@ -319,11 +319,11 @@ endef
 
 # Override commmands for GCC Safe Files
 ifeq ($(GCC),1)
+  $(SAFE_C_FILES): CC        := $(CROSS)gcc
   $(BUILD_DIR)/src/main.o:                          OPT_FLAGS := -g
   $(BUILD_DIR)/src/racing/skybox_and_splitscreen.o: OPT_FLAGS := -g
   $(BUILD_DIR)/src/racing/render_courses.o:         OPT_FLAGS := -g
   $(SAFE_C_FILES): OPT_FLAGS := -O3
-  $(SAFE_C_FILES): CC        := $(CROSS)gcc
   $(SAFE_C_FILES): MIPSISET  := -mips3
   $(SAFE_C_FILES): CFLAGS    := -G 0 $(OPT_FLAGS) $(TARGET_CFLAGS) $(MIPSISET) $(DEF_INC_CFLAGS) -mno-shared -march=vr4300 -mfix4300 -mabi=32 -mhard-float \
    -mdivide-breaks -fno-stack-protector -fno-common -fno-zero-initialized-in-bss -fno-PIC -mno-abicalls -fno-strict-aliasing -fno-inline-functions          \
@@ -356,6 +356,8 @@ include $(MAKEFILE_SPLIT)
 
 MODS_SEGMENT :=
 MODS_SEGMENT_BSS :=
+MODS_O_FILES :=
+FILES_HOOKED_O :=
 
 # These are files that need to be encoded into EUC-JP in order for the ROM to match
 # We filter them out from the regular C_FILES since we don't need nor want the
@@ -379,6 +381,21 @@ MODS_DIR := mods
 MOD_MAKE_INCLUDES := $(shell find $(MODS_DIR) -type f -name "mod.mk")
 
 $(foreach inc,$(MOD_MAKE_INCLUDES),$(eval include $(inc)))
+
+EXTENSION := .o(.text*);
+MODS_SEGMENT += $(MODS_O_FILES:.o=$(EXTENSION))
+EXTENSION := .o(.data*);
+MODS_SEGMENT += $(MODS_O_FILES:.o=$(EXTENSION))
+EXTENSION := .o(.rodata*);
+MODS_SEGMENT += $(MODS_O_FILES:.o=$(EXTENSION))
+EXTENSION := .o(.bss*);
+MODS_SEGMENT_BSS += $(MODS_O_FILES:.o=$(EXTENSION))
+
+O_FILES += $(MODS_O_FILES)
+
+FILES_HOOKED_O := $(sort $(FILES_HOOKED_O))
+
+$(FILES_HOOKED_O): CC := ./tools/hooks $(CC)
 
 # Automatic dependency files
 DEP_FILES := $(O_FILES:.o=.d) $(BUILD_DIR)/$(LD_SCRIPT).d
@@ -597,7 +614,8 @@ COURSE_DATA_TARGETS := $(foreach dir,$(COURSE_DIRS),$(BUILD_DIR)/$(dir)/course_d
 $(BUILD_DIR)/%.o: %.c
 	$(call print,Compiling:,$<,$@)
 	$(V)$(CC_CHECK) $(CC_CHECK_CFLAGS) -MMD -MP -MT $@ -MF $(BUILD_DIR)/$*.d $<
-	$(CC) -c $(CFLAGS) -o $@ $<
+	@echo $(FILES_HOOKED_O)
+	$(V)$(CC) -c $(CFLAGS) -o $@ $<
 	$(V)$(PYTHON) $(TOOLS_DIR)/set_o32abi_bit.py $@
 
 $(BUILD_DIR)/%.o: $(BUILD_DIR)/%.c
