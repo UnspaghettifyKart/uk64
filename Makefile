@@ -376,9 +376,15 @@ O_FILES := \
   $(foreach file,$(S_FILES),$(BUILD_DIR)/$(file:.s=.o)) \
 #   $(EUC_JP_FILES:%.c=$(BUILD_DIR)/%.jp.o)
 
+define clear_roms_files
+  @rm -f $(ELF) $(ROM) $(BUILD_DIR)/$(LD_SCRIPT)
+endef
+
 MODS_DIR := mods
 
-MOD_MAKE_INCLUDES := $(shell find $(MODS_DIR) -type f -name "mod.mk")
+MODS_DISABLE := $(shell cat mods.disabled 2>/dev/null)
+
+MOD_MAKE_INCLUDES := $(filter-out $(MODS_DISABLE),$(shell find $(MODS_DIR) -type f -name "mod.mk"))
 
 $(foreach inc,$(MOD_MAKE_INCLUDES),$(eval include $(inc)))
 
@@ -614,7 +620,6 @@ COURSE_DATA_TARGETS := $(foreach dir,$(COURSE_DIRS),$(BUILD_DIR)/$(dir)/course_d
 $(BUILD_DIR)/%.o: %.c
 	$(call print,Compiling:,$<,$@)
 	$(V)$(CC_CHECK) $(CC_CHECK_CFLAGS) -MMD -MP -MT $@ -MF $(BUILD_DIR)/$*.d $<
-	@echo $(FILES_HOOKED_O)
 	$(V)$(CC) -c $(CFLAGS) -o $@ $<
 	$(V)$(PYTHON) $(TOOLS_DIR)/set_o32abi_bit.py $@
 

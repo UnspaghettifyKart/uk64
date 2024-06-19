@@ -62,6 +62,15 @@ void load_list_hook(char * file, char * source) {
     }
 }
 
+void free_list_hook() {
+    ListElement *element = list_hook.head;
+    while (element) {
+        free(element->data);
+        element = element->next;
+    }
+    list_free(&list_hook);
+}
+
 void save_list_hook(char * file) {
     FILE *file_ = fopen(file, "wb");
     ListElement *element = list_hook.head;
@@ -170,7 +179,7 @@ void insert_function(FILE* file_out, Hook *hook, char full_arg_list[16][STR_SIZE
         if (strncmp(return_type, "void", 4) == 0) {
             fprintf(file_out, "    ");
         } else {
-            fprintf(file_out, "    result = ", return_type);
+            fprintf(file_out, "    result = ");
         }
         fprintf(file_out, "%s(", hook->function_call);
         if (strncmp(full_arg_list[0], "oid", 3) != 0) {
@@ -247,7 +256,6 @@ void insert_original_function(FILE* file, char *return_type, char* function_name
 }
 
 void insert_hooks(FILE* file_out, char *return_type, char *function_name, char full_arg_list[16][STR_SIZE], int full_arg_list_idx, bool* file_modified) {
-    bool hook_inserted = false;
     char return_type_[STR_SIZE] = "";
     copy_before_lastword(return_type, return_type_);
     
@@ -467,6 +475,9 @@ char* get_and_apply_hooks(char *file_name) {
                     }
                     if (strcmp(word_name, HOOK_KEYWORD) == 0) {
                         printf("Hook detected\n");
+                        if (hook != NULL) {
+                            free(hook);
+                        }
                         hook = malloc(sizeof(Hook));
                         strcpy(hook->source, file_name);
                         in_hook = true;
@@ -497,24 +508,73 @@ char* get_and_apply_hooks(char *file_name) {
     }
 
     save_list_hook("hook.bin");
+    free_list_hook();
     fclose(file);
     fclose(file_out);
 
     printf("File modified: %s %d\n", file_name,file_modified);
 
     if (!file_modified) {
-        if (remove(file_out_name) == 0) {
-            printf("File removed: %s\n", file_out_name);
-        } else {
+        if (remove(file_out_name) != 0) {
             printf("File not removed: %s\n", file_out_name);
             exit(1);
         }
+        free(file_out_name);
         return file_name;
     }
     return file_out_name;
 }
 
+bool custom_action(int argc, char *argv[]) {
+    if (strcmp(argv[1], "clean") == 0) {
+        if (remove("hook.bin") != 0) {
+            printf("File not removed: hook.bin\n");
+            exit(1);
+        }
+        return true;
+    }
+    if (strcmp(argv[1], "remove") == 0) {
+        if (argc < 3) {
+            printf("Usage: hook remove [file]\n");
+            exit(1);
+        }
+        FILE *file_ = fopen("hook.bin", "rb");
+        if (!file_) {
+            return;
+        }
+        Hook hook;
+        for (int size = 0; (size = fread(&hook, 1, sizeof(Hook), file_)) > 0; ) {
+            bool skip = false;
+            for (int i = 2; i < argc; i++) {
+                if (strcmp(hook.source, argv[i]) == 0) {
+                    printf("Removing: %s\n", hook.function_call);
+                    skip = true;
+                    break;
+                }
+            }
+            if (skip) {
+                continue;
+            }
+            Hook *hook_ = malloc(sizeof(Hook));
+            memcpy(hook_, &hook, sizeof(Hook));
+            list_append(&list_hook, hook_);
+        }
+        save_list_hook("hook.bin");
+        return true;
+    }
+    return false;
+}
+
 int main(int argc, char *argv[]) {
+    if (argc < 2) {
+        printf("Usage: hook [args]\n");
+        return 1;
+    }
+
+    if (custom_action(argc, argv)) {
+        return 0;
+    }
+
     char **new_arg = malloc(sizeof(char*) * argc);
 
     for (int i = 1; i < argc; i++) {
