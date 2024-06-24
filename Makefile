@@ -388,6 +388,11 @@ MOD_MAKE_INCLUDES := $(filter-out $(MODS_DISABLE),$(shell find $(MODS_DIR) -type
 
 $(foreach inc,$(MOD_MAKE_INCLUDES),$(eval include $(inc)))
 
+actualise_mods:
+	$(call clear_roms_files)
+	$(V)rm -f $(FILES_HOOKED_O) hook.bin
+	@echo mods detected $(MOD_MAKE_INCLUDES)
+
 EXTENSION := .o(.text*);
 MODS_SEGMENT += $(MODS_O_FILES:.o=$(EXTENSION))
 EXTENSION := .o(.data*);
@@ -396,6 +401,15 @@ EXTENSION := .o(.rodata*);
 MODS_SEGMENT += $(MODS_O_FILES:.o=$(EXTENSION))
 EXTENSION := .o(.bss*);
 MODS_SEGMENT_BSS += $(MODS_O_FILES:.o=$(EXTENSION))
+
+$(MODS_O_FILES): CC := $(CROSS)gcc
+
+$(MODS_O_FILES): OPT_FLAGS := -O3
+$(MODS_O_FILES): MIPSISET  := -mips3
+$(MODS_O_FILES): CFLAGS    := -G 0 $(OPT_FLAGS) $(TARGET_CFLAGS) $(MIPSISET) $(DEF_INC_CFLAGS) -mno-shared -march=vr4300 -mfix4300 -mabi=32 -mhard-float \
+  -mdivide-breaks -fno-stack-protector -fno-common -fno-zero-initialized-in-bss -fno-PIC -mno-abicalls -fno-strict-aliasing -fno-inline-functions          \
+  -ffreestanding -fwrapv -Wall -Wextra -ffast-math -fno-unsafe-math-optimizations
+$(MODS_O_FILES): CC_CHECK := gcc -m32
 
 O_FILES += $(MODS_O_FILES)
 

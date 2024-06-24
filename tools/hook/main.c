@@ -540,7 +540,7 @@ bool custom_action(int argc, char *argv[]) {
         }
         FILE *file_ = fopen("hook.bin", "rb");
         if (!file_) {
-            return;
+            exit(1);
         }
         Hook hook;
         for (int size = 0; (size = fread(&hook, 1, sizeof(Hook), file_)) > 0; ) {
