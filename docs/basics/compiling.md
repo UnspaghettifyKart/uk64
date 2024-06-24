@@ -47,11 +47,6 @@ brew install python3 capstone coreutils make pkg-config tehzz/n64-dev/mips64-elf
 
 Build using `gmake` ensuring homebrew `make` is used instead of the old macOS system `make`.
 
-# Python
-```bash
-pip install toml
-```
-
 # Docker
 
 Build the Docker image:

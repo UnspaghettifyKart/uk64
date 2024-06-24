@@ -4,7 +4,7 @@ With hook you can execute your function at the same time then function in game w
 ## Example
 I want to replace check_player_camera_collision only when my mod are enable so a way to do it is:
 ```c
-HOOK(check_player_camera_collision, START, 0)
+HOOK(check_player_camera_collision, AT(FUNCTION_CALL), TRUE, 0)
 u16 ignore(bool* cancel, UNUSED Player *player, UNUSED Camera *camera, UNUSED f32 arg2, UNUSED f32 arg3) {
     if (mymod_enable) {
         *cancel = TRUE;

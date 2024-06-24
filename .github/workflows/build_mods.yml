@@ -10,25 +10,22 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4.1.1
+        with:
+          submodules: "true"
       - name: Get Complementary file
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.1.1
         with:
           path: complementary_file
           repository: UnspaghettifyKart/action-build-private-file
-          ssh-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          ssh-key: ${{ secrets.LINUX_SSH_PRIVATE_KEY }}
       - name: Install dependencies
         run: |
-          sudo apt install build-essential pkg-config git binutils-mips-linux-gnu python3 python3-pip zlib1g-dev libaudiofile-dev libcapstone-dev |
-          pip install toml
-
-      - name: Build tools
-        run: |
-          make -C tools
-      - name: enable mods include in repo
-        run: |
-          rm mods/mods.toml
+          sudo apt install build-essential cmake pkg-config git binutils-mips-linux-gnu python3 zlib1g-dev libaudiofile-dev libcapstone-dev
       - name: Build
         run: |
           cp -r complementary_file/* .
+          echo "${{ secrets.AES_KEY }}" | openssl enc -d -aes-256-cbc -pass stdin -pbkdf2 -in baserom.us.z64.aes -out baserom.us.z64
+          cat "none" > mods.disabled
+          make assets
           make -j
